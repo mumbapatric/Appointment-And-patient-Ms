@@ -33,7 +33,7 @@ public class UserService {
     public User updateUser(Long id , User updatedUser){
         User existingUser = userRepository.findById(id)
                 .orElseThrow(()->new RuntimeException("user not found" + id));
-        existingUser.setUserName(updatedUser.getUserName());
+
         existingUser.setPassword(updatedUser.getPassword());
         existingUser.setEmail(updatedUser.getEmail());
         return userRepository.save(existingUser);

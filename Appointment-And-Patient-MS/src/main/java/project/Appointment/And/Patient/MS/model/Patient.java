@@ -18,7 +18,7 @@ public class Patient {
     @OneToOne
     @JoinColumn(name = "user_id")
     private User user;
-    private String fullName;
+    private String name;
     private LocalDate dateOfBirth;
     private String gender;
     private String email;

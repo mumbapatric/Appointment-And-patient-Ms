@@ -6,6 +6,7 @@ import project.Appointment.And.Patient.MS.model.Doctor;
 import java.util.List;
 
 public interface DoctorRepository extends JpaRepository<Doctor,Long> {
-    List<Doctor>findBySpecializationContainingIgnoreCase(String query);
-    List<Doctor>findByLocationContainingIgnoreCase(String query);
+    List<Doctor>findBySpecializationContainingIgnoreCase(String specialization);
+    List<Doctor>findByLocationContainingIgnoreCase(String location);
 }
+

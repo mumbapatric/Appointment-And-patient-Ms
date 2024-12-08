@@ -16,8 +16,9 @@ public class Doctor {
     @OneToOne
     @JoinColumn(name = "user_id")
     private User user;
-    private String fullName;
+    private String name;
     private String specialization;
+    private String location;
     private String email;
     private String phoneNumber;
     @ManyToOne

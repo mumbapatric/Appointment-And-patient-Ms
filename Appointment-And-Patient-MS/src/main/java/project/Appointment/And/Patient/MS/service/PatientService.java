@@ -36,7 +36,7 @@ public class PatientService {
                 .orElseThrow(()->new RuntimeException("patient not found" + id));
         existingPatient.setAddress(updatedPatient.getAddress());
         existingPatient.setEmail(updatedPatient.getEmail());
-        existingPatient.setFullName(updatedPatient.getFullName());
+        existingPatient.setName(updatedPatient.getName());
 
         existingPatient.setPhoneNumber(updatedPatient.getPhoneNumber());
         return patientRepository.save(existingPatient);

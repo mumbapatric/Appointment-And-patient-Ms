@@ -13,6 +13,8 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Entity
 public class Appointment {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private LocalDateTime appointmentDateTime;
     @Enumerated(EnumType.STRING)

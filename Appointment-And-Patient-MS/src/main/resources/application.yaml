@@ -1,0 +1,14 @@
+spring:
+  dataSource:
+    url: jdbc:postgresql://localhost:5432/appointment_Ms
+    username: postgres
+    password: 0753465675@mumba
+  jpa:
+    hibernate:
+      ddl-auto: update
+
+      thymeleaf:
+        prefix: classpath:/templates/   # Location of your templates
+        suffix: .html                   # File extension for your templates
+        cache: false
+

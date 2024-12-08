@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 import project.Appointment.And.Patient.MS.model.Appointment;
 import project.Appointment.And.Patient.MS.repository.AppointmentRepository;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -31,23 +32,29 @@ public class AppointmentService {
     }
 
     // find appointment by date
-    public List<Appointment> findByDate(String query){
-        return appointmentRepository.findByDateContainingIgnoreCase(query);
+    public List<Appointment> findByDate(LocalDate date){
+        return appointmentRepository.findByDate(date);
     }
 
     // find by status
-    public List<Appointment> findByStatus(String query){
-        return appointmentRepository.findByStatusContainingIgnoreCase(query);
+    public List<Appointment> getAppointmentsByStatus(Appointment.AppointmentStatus status) {
+        // If status is null or invalid, handle it
+        if (status == null) {
+            throw new IllegalArgumentException("Status must not be null");
+        }
+
+        return appointmentRepository.findByStatus(status);
     }
 
+
     //find by patient name
-    public List<Appointment> findByPatientName(String query){
-      return   appointmentRepository.findByPatientContainingIgnoreCase(query);
+    public List<Appointment> findByPatientName(String name){
+      return   appointmentRepository.findByPatient_NameContainingIgnoreCase(name);
     }
 
     //find by doctor
-    public List<Appointment> findByDoctor(String query){
-        return appointmentRepository.findByDoctorContainingIgnoreCase(query);
+    public List<Appointment> findByDoctor(String name){
+        return appointmentRepository.findByDoctor_NameContainingIgnoreCase(name);
     }
 
     // update Appointment

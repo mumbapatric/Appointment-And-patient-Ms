@@ -45,7 +45,7 @@ public class DoctorService {
     public Doctor updateDoctor(Long id, Doctor updatedDoctor){
         Doctor existingDoctor = doctorRepository.findById(id)
                 .orElseThrow(()->new RuntimeException("doctor not found" + id));
-        existingDoctor.setFullName(updatedDoctor.getFullName());
+        existingDoctor.setName(updatedDoctor.getName());
         existingDoctor.setSpecialization(updatedDoctor.getSpecialization());
         existingDoctor.setPhoneNumber(updatedDoctor.getPhoneNumber());
         existingDoctor.setEmail(updatedDoctor.getEmail());
