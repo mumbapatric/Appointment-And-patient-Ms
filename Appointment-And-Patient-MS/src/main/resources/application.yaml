@@ -1,8 +1,8 @@
 spring:
   dataSource:
     url: jdbc:postgresql://localhost:5432/appointment_Ms
-    username: postgres
-    password: 0753465675@mumba
+    username: ${db_username}
+    password: ${db_password}
   jpa:
     hibernate:
       ddl-auto: update
