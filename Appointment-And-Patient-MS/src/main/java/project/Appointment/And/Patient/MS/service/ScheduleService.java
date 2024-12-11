@@ -6,7 +6,6 @@ import project.Appointment.And.Patient.MS.repository.ScheduleRepository;
 
 import java.util.List;
 
-import static org.springframework.util.ClassUtils.isPresent;
 
 @Service
 public class ScheduleService {

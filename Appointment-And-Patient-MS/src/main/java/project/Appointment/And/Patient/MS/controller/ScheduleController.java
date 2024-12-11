@@ -16,11 +16,10 @@ public class ScheduleController {
 
     //add schedule
     @PostMapping
-    public ResponseEntity<String> addSchedule(@RequestBody Schedule schedule){
-        Schedule schedules = scheduleService.addSchedule(schedule);
-        return ResponseEntity.status(201).body("Schedule added successful");
+    public ResponseEntity<Schedule> addSchedule(@RequestBody Schedule schedule) {
+        Schedule savedSchedule = scheduleService.addSchedule(schedule);
+        return ResponseEntity.status(201).body(savedSchedule);
     }
-
     //find all
     @GetMapping
     public ResponseEntity<List<Schedule>> findAll(){
