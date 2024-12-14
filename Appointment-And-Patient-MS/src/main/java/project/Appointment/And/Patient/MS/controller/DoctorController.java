@@ -1,6 +1,8 @@
 package project.Appointment.And.Patient.MS.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import project.Appointment.And.Patient.MS.model.Doctor;
@@ -37,6 +39,16 @@ public class DoctorController {
             return ResponseEntity.ok(doctor);
         }
         return ResponseEntity.notFound().build();
+    }
+
+    //find doctor by specialization
+    @GetMapping("/specialization")
+    public ResponseEntity<List<Doctor>> findBySpecialization(@RequestParam String query){
+        List<Doctor> doctors = doctorService.findBySpecialization(query);
+        if (doctors.isEmpty()){
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(doctors);
     }
 
     //update doctor

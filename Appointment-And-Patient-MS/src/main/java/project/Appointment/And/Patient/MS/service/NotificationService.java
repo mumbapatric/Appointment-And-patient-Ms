@@ -1,19 +1,31 @@
 package project.Appointment.And.Patient.MS.service;
 
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import project.Appointment.And.Patient.MS.model.Notification;
 import project.Appointment.And.Patient.MS.repository.NotificationRepository;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
 public class NotificationService {
-    private final NotificationRepository notificationRepository;
 
-    public NotificationService(NotificationRepository notificationRepository) {
-        this.notificationRepository = notificationRepository;
+    @Autowired
+    private NotificationRepository notificationRepository;
+    @Autowired
+    private EmailService emailService;
+    @Autowired
+    private SmsService smsService;
+
+
+    public void sendEmail(String to, String subject, String text) {
+        emailService.sendEmail(to, subject, text);
     }
+    public void sendSms(String to, String message) {
+        smsService.sendSms(to, message);
+    }
+
 
     // add notification
     public Notification  addNotification(Notification notification){
@@ -48,4 +60,9 @@ public class NotificationService {
         }
         return false;
     }
+
+
+
 }
+
+

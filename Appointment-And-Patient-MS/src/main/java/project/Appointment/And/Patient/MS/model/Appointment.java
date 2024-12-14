@@ -31,9 +31,21 @@ public class Appointment {
     @JoinColumn(name = "schedule_id")
     private Schedule schedule;
 
+    public String getDoctorName() {
+        return doctor != null ? doctor.getName() : null;
+    }
+
     public enum AppointmentStatus {
         PENDING,
         CONFIRMED,
         CANCEL
+    }
+    // Helper methods to retrieve patient details for notifications
+    public String getPatientEmail() {
+        return patient != null ? patient.getEmail() : null;
+    }
+
+    public String getPatientPhoneNumber() {
+        return patient != null ? patient.getPhoneNumber() : null;
     }
 }

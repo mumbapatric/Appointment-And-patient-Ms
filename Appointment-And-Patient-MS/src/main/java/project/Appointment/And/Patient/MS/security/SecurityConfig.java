@@ -46,7 +46,9 @@ public class SecurityConfig {
                 .cors().configurationSource(corsConfigurationSource())
                 .and()
                 .authorizeRequests(auth -> auth
-                        .requestMatchers("/api/auth/**", "/admin/**", "/user/**", "/css/**", "/js/**", "/images/**").permitAll()
+                        .requestMatchers("/api/auth/**", "/admin/**", "/api/v1/doctors/**",
+                                "/api/v1/hospitals/**","/schedule/**","/api/v1/reminder/**","/api/v1/patients/**","/api/v1/appointment/**",
+                                "/user/**", "/css/**", "/js/**", "/images/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .exceptionHandling(exception -> exception.authenticationEntryPoint(jwtAuthenticationEntryPoint))

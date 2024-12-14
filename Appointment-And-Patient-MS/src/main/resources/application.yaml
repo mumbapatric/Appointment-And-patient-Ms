@@ -1,5 +1,5 @@
 spring:
-  dataSource:
+  datasource:
     url: jdbc:postgresql://localhost:5432/appointment_Ms
     username: ${db_username}
     password: ${db_password}
@@ -7,8 +7,27 @@ spring:
     hibernate:
       ddl-auto: update
 
-      thymeleaf:
-        prefix: classpath:/templates/   # Location of your templates
-        suffix: .html                   # File extension for your templates
-        cache: false
+  thymeleaf:
+    prefix: classpath:/templates/   # Location of your templates
+    suffix: .html                   # File extension for your templates
+    cache: false
 
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: joshuasirpatrickmumba@gmail.com
+    password: toly wxmt obmc xfoq
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
+twilio:
+  account:
+    sid: AC7f2b62835e802d83cdb7ae78a0fbe9ea
+  auth:
+    token: e23fd669156d660dd62853939d6e1ceb
+  phone:
+    number: +15677575781
