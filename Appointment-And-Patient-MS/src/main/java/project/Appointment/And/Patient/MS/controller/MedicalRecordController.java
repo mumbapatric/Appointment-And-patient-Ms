@@ -28,6 +28,13 @@ public class MedicalRecordController {
         return ResponseEntity.ok(medicalRecords);
     }
 
+    //get medical record by patient id
+    @GetMapping("/patient/{id}")
+    public ResponseEntity<List<MedicalRecord>> findByPatientId(@PathVariable Long id){
+        List<MedicalRecord> medicalRecords = medicalRecordService.findByPatientId(id);
+        return ResponseEntity.ok(medicalRecords);
+    }
+
     //get all id
     @GetMapping("/{id}")
     public ResponseEntity<MedicalRecord> findById(@PathVariable Long id){

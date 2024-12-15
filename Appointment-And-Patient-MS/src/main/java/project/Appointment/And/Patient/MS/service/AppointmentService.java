@@ -47,14 +47,14 @@ public class AppointmentService {
         return appointmentRepository.findByStatus(status);
     }
 
-    // Find by patient name
-    public List<Appointment> findByPatientName(String name) {
-        return appointmentRepository.findByPatient_NameContainingIgnoreCase(name);
+    // Find by patient id
+    public List<Appointment> findByPatientName(Long id) {
+        return appointmentRepository.findByPatient_id(id);
     }
 
     // Find by doctor
-    public List<Appointment> findByDoctor(String name) {
-        return appointmentRepository.findByDoctor_NameContainingIgnoreCase(name);
+    public List<Appointment> findByDoctor(Long id) {
+        return appointmentRepository.findByDoctor_Id(id);
     }
 
     // Update appointment

@@ -12,17 +12,18 @@ import project.Appointment.And.Patient.MS.service.NotificationService;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/appointment")
+@RequestMapping("/api/v1/appointments")
 public class AppointmentController {
 
     private static final Logger logger = LoggerFactory.getLogger(AppointmentController.class);
 
     @Autowired
     private AppointmentService appointmentService;
+
     @Autowired
     private NotificationService notificationService;
 
-    // Add appointment
+    // Add appointment (book)
     @PostMapping
     public ResponseEntity<String> addAppointment(@RequestBody Appointment appointment) {
         logger.info("Received appointment: {}", appointment);
@@ -50,7 +51,40 @@ public class AppointmentController {
         return ResponseEntity.notFound().build();
     }
 
-    // Confirm appointment
+    // Get appointments for a patient
+    @GetMapping("/patient/{patientId}")
+    public ResponseEntity<List<Appointment>> getAppointmentsForPatient(@PathVariable Long patientId) {
+        List<Appointment> appointments = appointmentService.findByPatientName(patientId);
+        return ResponseEntity.ok(appointments);
+    }
+
+    // Get appointments for a doctor
+    @GetMapping("/doctor/{doctorId}")
+    public ResponseEntity<List<Appointment>> getAppointmentsForDoctor(@PathVariable Long doctorId) {
+        List<Appointment> appointments = appointmentService.findByDoctor(doctorId);
+        return ResponseEntity.ok(appointments);
+    }
+
+    // Reschedule appointment
+    @PutMapping("/{id}/reschedule")
+    public ResponseEntity<Appointment> rescheduleAppointment(@PathVariable Long id, @RequestBody Appointment updatedAppointment) {
+        Appointment rescheduledAppointment = appointmentService.updateAppointment(id, updatedAppointment);
+        return ResponseEntity.ok(rescheduledAppointment);
+    }
+
+    // Cancel appointment by patient
+    @PutMapping("/{id}/cancel")
+    public ResponseEntity<String> cancelAppointment(@PathVariable Long id) {
+        Appointment updatedAppointment = appointmentService.updateAppointmentStatus(id, Appointment.AppointmentStatus.CANCEL);
+        if (updatedAppointment != null) {
+            notificationService.sendSms(updatedAppointment.getPatientPhoneNumber(), "Your appointment has been cancelled.");
+            notificationService.sendEmail(updatedAppointment.getPatientEmail(), "Appointment Cancelled", "Your appointment has been cancelled.");
+            return ResponseEntity.ok("Appointment cancelled successfully");
+        }
+        return ResponseEntity.notFound().build();
+    }
+
+    // Confirm appointment by doctor
     @PutMapping("/{id}/confirm")
     public ResponseEntity<String> confirmAppointment(@PathVariable Long id) {
         Appointment updatedAppointment = appointmentService.updateAppointmentStatus(id, Appointment.AppointmentStatus.CONFIRMED);
@@ -62,14 +96,14 @@ public class AppointmentController {
         return ResponseEntity.notFound().build();
     }
 
-    // Cancel appointment
-    @PutMapping("/{id}/cancel")
-    public ResponseEntity<String> cancelAppointment(@PathVariable Long id) {
+    // Reject appointment by doctor
+    @PutMapping("/{id}/reject")
+    public ResponseEntity<String> rejectAppointment(@PathVariable Long id) {
         Appointment updatedAppointment = appointmentService.updateAppointmentStatus(id, Appointment.AppointmentStatus.CANCEL);
         if (updatedAppointment != null) {
-            notificationService.sendSms(updatedAppointment.getPatientPhoneNumber(), "Your appointment has been cancelled by the doctor.");
-            notificationService.sendEmail(updatedAppointment.getPatientEmail(), "Appointment Cancelled", "Your appointment has been cancelled by the doctor.");
-            return ResponseEntity.ok("Appointment cancelled successfully");
+            notificationService.sendSms(updatedAppointment.getPatientPhoneNumber(), "Your appointment has been rejected by the doctor.");
+            notificationService.sendEmail(updatedAppointment.getPatientEmail(), "Appointment Rejected", "Your appointment has been rejected by the doctor.");
+            return ResponseEntity.ok("Appointment rejected successfully");
         }
         return ResponseEntity.notFound().build();
     }

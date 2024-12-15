@@ -1,17 +1,22 @@
 package project.Appointment.And.Patient.MS.service;
 
 import org.springframework.stereotype.Service;
+import project.Appointment.And.Patient.MS.model.Appointment;
 import project.Appointment.And.Patient.MS.model.Doctor;
+import project.Appointment.And.Patient.MS.repository.AppointmentRepository;
 import project.Appointment.And.Patient.MS.repository.DoctorRepository;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
 public class DoctorService {
     private final DoctorRepository doctorRepository;
+    private final AppointmentRepository appointmentRepository;
 
-    public DoctorService(DoctorRepository doctorRepository) {
+    public DoctorService(DoctorRepository doctorRepository, AppointmentRepository appointmentRepository) {
         this.doctorRepository = doctorRepository;
+        this.appointmentRepository = appointmentRepository;
     }
 
 //add doctor
@@ -33,6 +38,11 @@ public class DoctorService {
     //find by name
     public List<Doctor> findDoctorByLocation(String query){
        return doctorRepository.findByLocationContainingIgnoreCase(query);
+    }
+
+    public List<Appointment> getDailySchedule(Long doctorId) {
+        LocalDate today = LocalDate.now();
+        return appointmentRepository.findByDoctorIdAndDate(doctorId, today);
     }
 
     // find by specialization

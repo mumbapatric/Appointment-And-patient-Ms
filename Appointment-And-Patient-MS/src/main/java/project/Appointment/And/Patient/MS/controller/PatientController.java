@@ -4,6 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
+import project.Appointment.And.Patient.MS.model.Appointment;
+import project.Appointment.And.Patient.MS.model.MedicalRecord;
 import project.Appointment.And.Patient.MS.model.Patient;
 import project.Appointment.And.Patient.MS.service.PatientService;
 
@@ -21,6 +23,14 @@ public class PatientController {
         Patient patients = patientService.addPatient(patient);
         return ResponseEntity.status(201).body("patient added successful");
     }
+
+    @GetMapping("/dashboard/upcoming-appointments/{patientId}")
+    public ResponseEntity<List<Appointment>> getUpcomingAppointments(@PathVariable Long patientId) {
+        return ResponseEntity.ok(patientService.getUpcomingAppointments(patientId)); }
+
+    @GetMapping("/dashboard/medical-history/{patientId}")
+    public ResponseEntity<List<MedicalRecord>> getMedicalHistory(@PathVariable Long patientId) {
+        return ResponseEntity.ok(patientService.getMedicalHistory(patientId)); }
 
     // get all
     @GetMapping

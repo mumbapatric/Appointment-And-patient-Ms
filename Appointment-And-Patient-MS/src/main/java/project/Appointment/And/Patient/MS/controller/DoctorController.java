@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import project.Appointment.And.Patient.MS.model.Appointment;
 import project.Appointment.And.Patient.MS.model.Doctor;
 import project.Appointment.And.Patient.MS.service.DoctorService;
 
@@ -23,6 +24,9 @@ public class DoctorController {
         return ResponseEntity.status(201).body("Doctor Added Successful");
     }
 
+    @GetMapping("/dashboard/daily-schedule/{doctorId}")
+    public ResponseEntity<List<Appointment>> getDailySchedule(@PathVariable Long doctorId) {
+        return ResponseEntity.ok(doctorService.getDailySchedule(doctorId)); }
 
     //find all
     @GetMapping

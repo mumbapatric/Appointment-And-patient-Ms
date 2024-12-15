@@ -47,8 +47,9 @@ public class SecurityConfig {
                 .and()
                 .authorizeRequests(auth -> auth
                         .requestMatchers("/api/auth/**", "/admin/**", "/api/v1/doctors/**",
-                                "/api/v1/hospitals/**","/schedule/**","/api/v1/reminder/**","/api/v1/patients/**","/api/v1/appointment/**",
+                                "/api/v1/hospitals/**","/api/v1/admin/**","/api/v1/medicalRecords/**","/schedule/**","/api/v1/reminder/**","/api/v1/patients/**","/api/v1/appointments/**",
                                 "/user/**", "/css/**", "/js/**", "/images/**").permitAll()
+                        .requestMatchers("/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
                 .exceptionHandling(exception -> exception.authenticationEntryPoint(jwtAuthenticationEntryPoint))

@@ -1,6 +1,7 @@
 package project.Appointment.And.Patient.MS.service;
 
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.GetMapping;
 import project.Appointment.And.Patient.MS.model.MedicalRecord;
 import project.Appointment.And.Patient.MS.repository.MedicalRecordRepository;
 
@@ -18,6 +19,11 @@ public class MedicalRecordService {
     public MedicalRecord addMedicalRecord(MedicalRecord medicalRecord){
         return medicalRecordRepository.save(medicalRecord);
 
+    }
+
+    //find by patient id
+    public List<MedicalRecord> findByPatientId(Long id){
+        return medicalRecordRepository.findByPatientId(id);
     }
 
     //find all medical record
