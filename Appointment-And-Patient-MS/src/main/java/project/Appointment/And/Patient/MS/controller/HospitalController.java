@@ -2,6 +2,7 @@ package project.Appointment.And.Patient.MS.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import project.Appointment.And.Patient.MS.model.Hospital;
 import project.Appointment.And.Patient.MS.service.HospitalService;
