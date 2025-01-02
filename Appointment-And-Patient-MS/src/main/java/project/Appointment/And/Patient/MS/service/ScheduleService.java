@@ -16,7 +16,6 @@ public class ScheduleService {
     }
 
     // add schedule
-
     public Schedule addSchedule(Schedule schedule){
         return scheduleRepository.save(schedule);
     }

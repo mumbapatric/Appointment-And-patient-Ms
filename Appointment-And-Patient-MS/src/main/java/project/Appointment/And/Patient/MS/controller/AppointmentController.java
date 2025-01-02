@@ -6,7 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import project.Appointment.And.Patient.MS.model.Appointment;
+import project.Appointment.And.Patient.MS.repository.DoctorRepository;
 import project.Appointment.And.Patient.MS.service.AppointmentService;
+import project.Appointment.And.Patient.MS.service.DoctorService;
 import project.Appointment.And.Patient.MS.service.NotificationService;
 
 import java.util.List;
@@ -23,14 +25,17 @@ public class AppointmentController {
     @Autowired
     private NotificationService notificationService;
 
+    @Autowired
+    private DoctorRepository doctorRepository;
+
     // Add appointment (book)
     @PostMapping
     public ResponseEntity<String> addAppointment(@RequestBody Appointment appointment) {
         logger.info("Received appointment: {}", appointment);
         Appointment savedAppointment = appointmentService.addAppointment(appointment);
 
-        notificationService.sendSms(savedAppointment.getPatientPhoneNumber(), "Your appointment is confirmed.");
-        notificationService.sendEmail(savedAppointment.getPatientEmail(), "Appointment Confirmation", "Your appointment is confirmed.");
+        notificationService.sendSms(savedAppointment.getPatientPhoneNumber(), "Your appointment is scheduled with ");
+        notificationService.sendEmail(savedAppointment.getPatientEmail(), "Appointment Confirmation", "Your appointment is scheduled.");
         return ResponseEntity.ok("Appointment added successfully");
     }
 
@@ -77,7 +82,7 @@ public class AppointmentController {
     public ResponseEntity<String> cancelAppointment(@PathVariable Long id) {
         Appointment updatedAppointment = appointmentService.updateAppointmentStatus(id, Appointment.AppointmentStatus.CANCEL);
         if (updatedAppointment != null) {
-            notificationService.sendSms(updatedAppointment.getPatientPhoneNumber(), "Your appointment has been cancelled.");
+            notificationService.sendSms(updatedAppointment.getPatientPhoneNumber(), "Your appointment has been cancelled by doctor.");
             notificationService.sendEmail(updatedAppointment.getPatientEmail(), "Appointment Cancelled", "Your appointment has been cancelled.");
             return ResponseEntity.ok("Appointment cancelled successfully");
         }

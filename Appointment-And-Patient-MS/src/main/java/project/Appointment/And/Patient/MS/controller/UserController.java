@@ -1,9 +1,16 @@
 package project.Appointment.And.Patient.MS.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import project.Appointment.And.Patient.MS.model.Doctor;
+import project.Appointment.And.Patient.MS.model.Patient;
 import project.Appointment.And.Patient.MS.model.User;
+import project.Appointment.And.Patient.MS.service.DoctorService;
+import project.Appointment.And.Patient.MS.service.PatientService;
 import project.Appointment.And.Patient.MS.service.UserService;
 
 import java.util.List;
@@ -13,6 +20,10 @@ import java.util.List;
 public class UserController {
     @Autowired
     private UserService userService;
+    @Autowired
+    private DoctorService doctorService;
+    @Autowired
+    private PatientService patientService;
 
     //add user
     @PostMapping
@@ -28,6 +39,8 @@ public class UserController {
         List<User> users = userService.findAll();
         return ResponseEntity.ok(users);
     }
+
+
 
     //find by id
     @GetMapping("/{id}")

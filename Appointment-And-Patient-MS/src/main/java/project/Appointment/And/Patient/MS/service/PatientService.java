@@ -71,4 +71,8 @@ public class PatientService {
         return false;
     }
 
+    public Patient findPatientByUserId(Long userId) {
+        return patientRepository.findByUserId(userId).orElse(null);
+
+    }
 }

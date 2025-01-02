@@ -33,7 +33,7 @@ public class SecurityConfig {
     }
 
     @Bean
-    public PasswordEncoder passwordEncoder(){
+    public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
@@ -47,33 +47,42 @@ public class SecurityConfig {
         http.csrf().disable()
                 .cors().configurationSource(corsConfigurationSource())
                 .and()
-                .authorizeRequests(auth -> auth
-                        .requestMatchers("/api/auth/**", "/admin/**", "/api/v1/doctors/**",
-                                "/api/v1/hospitals/**","/api/v1/admin/**","/api/v1/medicalRecords/**","/schedule/**","/api/v1/reminder/**","/api/v1/patients/**","/api/v1/appointments/**",
-                                "/user/**", "/css/**", "/js/**", "/images/**").permitAll()
-                        .requestMatchers("/admin/**").hasRole("ADMIN")
-                        .anyRequest().authenticated()
-                )
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/api/v1/auth/**").permitAll() // Public API endpoints
+                        .requestMatchers("/admin/**").hasRole("ADMIN") // Admin-restricted endpoints
+                        .requestMatchers(
+                                "/api/v1/hospitals/**",
+                                "/api/v1/admin/**",
+                                "/api/v1/medicalRecords/**","/api/v1/doctors/**",
+                                "/schedule/**",
+                                "/api/v1/reminder/**",
+                                "/api/v1/patients/**",
+                                "/api/v1/appointments/**",
+                                "/user/**",
+                                "/css/**",
+                                "/js/**",
+                                "/images/**"
+                        ).permitAll() // Other public endpoints
+                        .anyRequest().authenticated()) // All other requests require authentication
                 .exceptionHandling(exception -> exception.authenticationEntryPoint(jwtAuthenticationEntryPoint))
-                .sessionManagement(session -> session
-                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                )
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .logout(logout -> logout
                         .logoutUrl("/api/auth/logout")
                         .logoutSuccessHandler((request, response, authentication) -> {
                             response.setStatus(HttpServletResponse.SC_OK);
                             response.getWriter().write("Logged out successfully");
-                        })
-                );
+                        }));
 
+        // Add the custom JWT filter before the default username password filter
         http.addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 
+
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOrigins(Arrays.asList("http://localhost:63342", "http://127.0.0.1:5500", "http://localhost:3000"));
+        config.setAllowedOrigins(Arrays.asList("http://localhost:63342", "http://127.0.0.1:5500", "http://localhost:59340"));
         config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type", "Accept"));
         config.setAllowCredentials(true);

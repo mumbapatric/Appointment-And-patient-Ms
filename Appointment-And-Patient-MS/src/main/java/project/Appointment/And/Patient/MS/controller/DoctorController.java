@@ -1,8 +1,5 @@
 package project.Appointment.And.Patient.MS.controller;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import project.Appointment.And.Patient.MS.model.Appointment;
@@ -18,11 +15,10 @@ public class DoctorController {
     private DoctorService doctorService;
 
     //add doctor
-    @PostMapping
-    public ResponseEntity<String> addDoctor(@RequestBody Doctor doctor){
+    @PostMapping public ResponseEntity<String> addDoctor(@RequestBody Doctor doctor){
         doctorService.addDoctor(doctor);
-        return ResponseEntity.status(201).body("Doctor Added Successful");
-    }
+        return ResponseEntity.status(201).body("doctor added successful");
+        }
 
     @GetMapping("/dashboard/daily-schedule/{doctorId}")
     public ResponseEntity<List<Appointment>> getDailySchedule(@PathVariable Long doctorId) {
@@ -30,10 +26,13 @@ public class DoctorController {
 
     //find all
     @GetMapping
+
     public ResponseEntity<List<Doctor>> findAll(){
         List<Doctor> doctors = doctorService.findAll();
         return ResponseEntity.ok(doctors);
     }
+
+
 
     //find by id
     @GetMapping("/{id}")

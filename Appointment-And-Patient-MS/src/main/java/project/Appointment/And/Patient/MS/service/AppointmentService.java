@@ -1,8 +1,14 @@
 package project.Appointment.And.Patient.MS.service;
 
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 import project.Appointment.And.Patient.MS.model.Appointment;
+import project.Appointment.And.Patient.MS.model.Doctor;
+import project.Appointment.And.Patient.MS.model.Patient;
 import project.Appointment.And.Patient.MS.repository.AppointmentRepository;
+import project.Appointment.And.Patient.MS.repository.DoctorRepository;
+import project.Appointment.And.Patient.MS.repository.NotificationRepository;
+import project.Appointment.And.Patient.MS.repository.PatientRepository;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -11,17 +17,64 @@ import java.util.List;
 
 @Service
 public class AppointmentService {
+    private final NotificationService notificationService;
+    private final PatientRepository patientRepository;
     private final AppointmentRepository appointmentRepository;
+    private final DoctorRepository doctorRepository;
+    private final EmailService emailService;
 
-    public AppointmentService(AppointmentRepository appointmentRepository) {
+    public AppointmentService(NotificationRepository notificationRepository, NotificationService notificationService, PatientRepository patientRepository, AppointmentRepository appointmentRepository, DoctorRepository doctorRepository, EmailService emailService) {
+        this.notificationService = notificationService;
+        this.patientRepository = patientRepository;
         this.appointmentRepository = appointmentRepository;
+        this.doctorRepository = doctorRepository;
+        this.emailService = emailService;
     }
 
-    // Add appointment
     public Appointment addAppointment(Appointment appointment) {
-        appointment.setStatus(Appointment.AppointmentStatus.PENDING); // Set initial status to PENDING
-        return appointmentRepository.save(appointment);
+        // Load patient details
+        Patient patient = patientRepository.findById(appointment.getPatient().getId())
+                .orElseThrow(() -> new IllegalArgumentException("Patient not found"));
+
+        if (patient.getPhoneNumber() == null || patient.getPhoneNumber().isEmpty()) {
+            throw new IllegalArgumentException("Patient phone number must not be null or empty");
+        }
+
+        // Load doctor details
+        Doctor doctor = doctorRepository.findById(appointment.getDoctor().getId())
+                .orElseThrow(() -> new IllegalArgumentException("Doctor not found"));
+
+        // Set patient and doctor details
+        appointment.setPatient(patient);
+        appointment.setDoctor(doctor);
+        appointment.setStatus(Appointment.AppointmentStatus.PENDING);
+
+        // Save appointment
+        Appointment savedAppointment = appointmentRepository.save(appointment);
+
+        // Construct the notification message
+        String notificationMessage = "Your appointment is scheduled with Dr. " +
+                savedAppointment.getDoctor().getName() +
+                " on " + savedAppointment.getAppointmentDateTime() +
+                " at " + savedAppointment.getLocation();
+
+        String notificationDoctor = "Dear Doctor you have appointment with" +   savedAppointment
+                .getPatient().getName()  +  " on " + savedAppointment.getAppointmentDateTime() +
+                " at " + savedAppointment.getLocation() + "kindly check schedule to confirm or cancel";
+
+        // Send SMS notification
+        notificationService.sendSms(patient.getPhoneNumber(), notificationMessage);
+        notificationService.sendSms(doctor.getPhoneNumber(), notificationDoctor);
+        // Send Email notification
+        emailService.sendEmail(patient.getEmail(),
+                "Appointment Confirmation", notificationMessage);
+        emailService.sendEmail(doctor.getEmail(),"Appointment Confirmation"
+        ,notificationDoctor);
+
+        return savedAppointment;
     }
+
+
 
     // Find all
     public List<Appointment> findAll() {

@@ -17,7 +17,7 @@ import project.Appointment.And.Patient.MS.model.User.Role;
 import project.Appointment.And.Patient.MS.service.UserService;
 
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping("/api/v1/auth")
 @RequiredArgsConstructor
 public class AuthenticationController {
 

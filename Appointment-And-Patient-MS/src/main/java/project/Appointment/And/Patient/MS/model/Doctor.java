@@ -16,12 +16,19 @@ public class Doctor {
     @OneToOne
     @JoinColumn(name = "user_id")
     private User user;
+    @Column(name = "name",nullable = false)
     private String name;
+    @Column(name = "specialization",nullable = false)
     private String specialization;
+    @Column(name = "location",nullable = false)
     private String location;
+    @Column(name = "email",unique = true,nullable = false)
     private String email;
+    @Column(name = "phoneNumber",nullable = false)
     private String phoneNumber;
     @ManyToOne
     @JoinColumn(name = "hospital_id")
     private Hospital hospital;
+    @Column(name = "password",nullable = false)
+    private String password;
 }

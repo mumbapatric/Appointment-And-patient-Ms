@@ -15,10 +15,22 @@ public class SmsService {
         if (to == null || to.isEmpty()) {
             throw new IllegalArgumentException("The 'to' phone number must not be null or empty.");
         }
+
+        // Ensure the phone number is in E.164 format
+        String formattedTo = formatPhoneNumber(to);
+
         Message.creator(
-                new PhoneNumber(to),
-                new PhoneNumber(twilioPhoneNumber),
-                message)
+                        new PhoneNumber(formattedTo),
+                        new PhoneNumber(twilioPhoneNumber),
+                        message)
                 .create();
+    }
+
+    private String formatPhoneNumber(String phoneNumber) {
+        // Basic example to format Tanzanian phone numbers
+        if (phoneNumber.startsWith("0")) {
+            phoneNumber = phoneNumber.substring(1);
+        }
+        return "+255" + phoneNumber;
     }
 }

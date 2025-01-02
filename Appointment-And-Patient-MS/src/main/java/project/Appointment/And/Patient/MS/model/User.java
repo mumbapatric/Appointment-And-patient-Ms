@@ -1,5 +1,6 @@
 package project.Appointment.And.Patient.MS.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -29,21 +30,18 @@ public class User implements UserDetails {
     @Column(unique = true, nullable = false)
     private String email;
 
+
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"))
     @Enumerated(EnumType.STRING)
     private List<Role> roles;
 
     @Override
+    @JsonIgnore
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return roles.stream()
                 .map(role -> (GrantedAuthority) () -> "ROLE_" + role.name())
                 .toList();
-    }
-
-    @Override
-    public String getUsername() {
-        return username;
     }
 
     @Override
@@ -65,6 +63,7 @@ public class User implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+    
 
     public enum Role {
         ADMIN,
