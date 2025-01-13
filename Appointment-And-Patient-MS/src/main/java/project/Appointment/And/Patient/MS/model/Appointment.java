@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @Entity
 public class Appointment {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
     private LocalDateTime appointmentDateTime;
     @Enumerated(EnumType.STRING)

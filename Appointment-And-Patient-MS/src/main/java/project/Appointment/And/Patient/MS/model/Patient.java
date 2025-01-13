@@ -13,7 +13,7 @@ import java.time.LocalDate;
 @Entity
 public class Patient {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
     @OneToOne
     @JoinColumn(name = "user_id")
@@ -22,6 +22,7 @@ public class Patient {
     private LocalDate dateOfBirth;
     private String gender;
     private String email;
+    private String password;
     private String phoneNumber;
     private String address;
     @ManyToOne

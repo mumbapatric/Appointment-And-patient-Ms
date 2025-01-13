@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import project.Appointment.And.Patient.MS.model.User;
 import project.Appointment.And.Patient.MS.model.User.Role;
+import project.Appointment.And.Patient.MS.service.UserDetailsService;
 import project.Appointment.And.Patient.MS.service.UserService;
 
 @RestController
@@ -21,6 +22,7 @@ import project.Appointment.And.Patient.MS.service.UserService;
 @RequiredArgsConstructor
 public class AuthenticationController {
 
+    private final UserDetailsService userDetailsService;
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
     private final UserService userService;
@@ -56,6 +58,18 @@ public class AuthenticationController {
                     .build(), headers, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+    }
+
+    @GetMapping("/me")
+    public ResponseEntity<?> getCurrentUserDetails(@RequestHeader("Authorization") String authHeader) {
+        try {
+            // Extract token from Authorization header
+            String token = authHeader.substring(7); // "Bearer " is 7 characters long
+            Object userDetails = userDetailsService.getCurrentUserDetails(token);
+            return ResponseEntity.ok(userDetails);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
 

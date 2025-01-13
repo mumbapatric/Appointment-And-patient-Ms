@@ -49,11 +49,12 @@ public class SecurityConfig {
                 .and()
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/v1/auth/**").permitAll() // Public API endpoints
-                        .requestMatchers("/admin/**").hasRole("ADMIN") // Admin-restricted endpoints
+                        .requestMatchers("/admin/**").hasRole("ADMIN")
+                        .requestMatchers("/api/v1/doctors/**").hasRole("DOCTOR")
                         .requestMatchers(
                                 "/api/v1/hospitals/**",
                                 "/api/v1/admin/**",
-                                "/api/v1/medicalRecords/**","/api/v1/doctors/**",
+                                "/api/v1/medicalRecords/**",
                                 "/schedule/**",
                                 "/api/v1/reminder/**",
                                 "/api/v1/patients/**",
@@ -82,7 +83,7 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOrigins(Arrays.asList("http://localhost:63342", "http://127.0.0.1:5500", "http://localhost:59340"));
+        config.setAllowedOrigins(Arrays.asList("http://localhost:63342", "http://127.0.0.1:5500", "http://localhost:3000"));
         config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type", "Accept"));
         config.setAllowCredentials(true);

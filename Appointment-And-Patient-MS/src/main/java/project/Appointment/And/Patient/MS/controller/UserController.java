@@ -11,6 +11,7 @@ import project.Appointment.And.Patient.MS.model.Patient;
 import project.Appointment.And.Patient.MS.model.User;
 import project.Appointment.And.Patient.MS.service.DoctorService;
 import project.Appointment.And.Patient.MS.service.PatientService;
+import project.Appointment.And.Patient.MS.service.UserDetailsService;
 import project.Appointment.And.Patient.MS.service.UserService;
 
 import java.util.List;
@@ -24,7 +25,6 @@ public class UserController {
     private DoctorService doctorService;
     @Autowired
     private PatientService patientService;
-
     //add user
     @PostMapping
     public ResponseEntity<String> addUser(@RequestBody User user){
@@ -39,7 +39,6 @@ public class UserController {
         List<User> users = userService.findAll();
         return ResponseEntity.ok(users);
     }
-
 
 
     //find by id
