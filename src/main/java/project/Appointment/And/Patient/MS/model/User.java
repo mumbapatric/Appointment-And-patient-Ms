@@ -44,6 +44,16 @@ public class User implements UserDetails {
                 .toList();
     }
 
+    /**
+     * JsonIgnore Avoid infinite recursion
+     * How to use
+     * User user = userRepository.findById(user_id).orElseThrow(() -> new ResourceNotFoundException("User not found"));
+     * Doctor doctor = user.getDoctor();
+     * */
+    @OneToOne(mappedBy = "user")
+    @JsonIgnore
+    private Doctor doctor;
+
     @Override
     public boolean isAccountNonExpired() {
         return true;
