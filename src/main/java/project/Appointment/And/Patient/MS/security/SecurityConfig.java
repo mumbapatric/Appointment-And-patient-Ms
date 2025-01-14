@@ -49,8 +49,8 @@ public class SecurityConfig {
                 .and()
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/v1/auth/**").permitAll() // Public API endpoints
-                        .requestMatchers("/admin/**").hasRole("ADMIN")
-                        .requestMatchers("/api/v1/doctors/**").hasRole("DOCTOR")
+//                        .requestMatchers("/admin/**").hasRole("ADMIN")
+//                        .requestMatchers("/api/v1/doctors/**").hasRole("DOCTOR")
                         .requestMatchers(
                                 "/api/v1/hospitals/**",
                                 "/api/v1/admin/**",
@@ -62,7 +62,8 @@ public class SecurityConfig {
                                 "/user/**",
                                 "/css/**",
                                 "/js/**",
-                                "/images/**"
+                                "/images/**",
+                                "/**" // disable auth
                         ).permitAll() // Other public endpoints
                         .anyRequest().authenticated()) // All other requests require authentication
                 .exceptionHandling(exception -> exception.authenticationEntryPoint(jwtAuthenticationEntryPoint))

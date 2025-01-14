@@ -2,6 +2,7 @@ package project.Appointment.And.Patient.MS.service;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import project.Appointment.And.Patient.MS.exceptions.DoctorException;
 import project.Appointment.And.Patient.MS.model.Appointment;
 import project.Appointment.And.Patient.MS.model.Doctor;
 import project.Appointment.And.Patient.MS.model.User;
@@ -14,59 +15,68 @@ import java.util.List;
 
 @Service
 public class DoctorService {
+
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
     private final DoctorRepository doctorRepository;
     private final AppointmentRepository appointmentRepository;
 
-    public DoctorService(PasswordEncoder passwordEncoder, UserRepository userRepository, DoctorRepository doctorRepository, AppointmentRepository appointmentRepository) {
+    public DoctorService(PasswordEncoder passwordEncoder,
+                         UserRepository userRepository,
+                         DoctorRepository doctorRepository,
+                         AppointmentRepository appointmentRepository) {
         this.passwordEncoder = passwordEncoder;
         this.userRepository = userRepository;
         this.doctorRepository = doctorRepository;
         this.appointmentRepository = appointmentRepository;
-//        doctor.setPassword(passwordEncoder.encode(doctor.getPassword()));
     }
 
-//add doctor
-    public Doctor addDoctor(Doctor doctor){
+    //add doctor
+    public Doctor addDoctor(Doctor doctor) {
+        // Check if email already exists for a doctor
+        doctorRepository.findByEmail(doctor.getEmail())
+                .ifPresent(existingDoctor -> {
+                    throw new DoctorException.DoctorAlreadyExistsException("Email already exists: " + doctor.getEmail());
+                });
 
-        if (doctorRepository.findByEmail(doctor.getEmail()).isPresent()) {
-            throw new IllegalArgumentException("Email already exists: " + doctor.getEmail());
-        }
         String encodedPassword = passwordEncoder.encode(doctor.getPassword());
         User user = new User();
         user.setUsername(doctor.getEmail());
         user.setPassword(encodedPassword);
         user.setEmail(doctor.getEmail());
         user.setRoles(List.of(User.Role.DOCTOR));
-        doctor.setPassword(encodedPassword);
+
         userRepository.save(user);
+        doctor.setPassword(encodedPassword);
         doctor.setUser(user);
+
         return doctorRepository.save(doctor);
     }
 
     //find all doctor
-    public List<Doctor> findAll(){
-        return doctorRepository.findAll();
+    public List<Doctor> findAll() {
+        List<Doctor> doctors = doctorRepository.findAll();
+//        if (doctors.isEmpty()) {
+//            throw new DoctorException.NoDoctorsFoundException("No doctors found in the system.");
+//        }
+        return doctors;
     }
 
     // find by id
-    public Doctor findById(Long id){
+    public Doctor findById(Long id) {
         return doctorRepository.findById(id)
-                .orElseThrow(()->new RuntimeException("doctor not found" + id));
+                .orElseThrow(() -> new DoctorException.DoctorNotFoundException("Doctor not found with ID " + id));
     }
-
 
     //find doctor by user id
     public Doctor getDoctorByUserId(Long userId) {
         return doctorRepository.findByUserId(userId)
-                .orElseThrow(() -> new RuntimeException("Doctor not found for user ID: " + userId));
+                .orElseThrow(() -> new DoctorException.DoctorNotFoundException("Doctor not found for user ID: " + userId));
     }
 
-
-    //find by name
-    public List<Doctor> findDoctorByLocation(String query){
-       return doctorRepository.findByLocationContainingIgnoreCase(query);
+    // find doctor by location name
+    public List<Doctor> findDoctorByLocation(String query) {
+        return doctorRepository.findByLocationContainingIgnoreCase(query);
     }
 
     public List<Appointment> getDailySchedule(Long doctorId) {
@@ -75,15 +85,15 @@ public class DoctorService {
     }
 
     // find by specialization
-    public List<Doctor> findBySpecialization(String query){
+    public List<Doctor> findBySpecialization(String query) {
         return doctorRepository.findBySpecializationContainingIgnoreCase(query);
     }
 
-
     //update doctor
-    public Doctor updateDoctor(Long id, Doctor updatedDoctor){
+    public Doctor updateDoctor(Long id, Doctor updatedDoctor) {
         Doctor existingDoctor = doctorRepository.findById(id)
-                .orElseThrow(()->new RuntimeException("doctor not found" + id));
+                .orElseThrow(() -> new DoctorException.DoctorNotFoundException("Doctor not found with ID " + id));
+
         existingDoctor.setName(updatedDoctor.getName());
         existingDoctor.setSpecialization(updatedDoctor.getSpecialization());
         existingDoctor.setPhoneNumber(updatedDoctor.getPhoneNumber());
@@ -93,15 +103,16 @@ public class DoctorService {
     }
 
     //delete doctor
-    public boolean deleteDoctor(Long id){
-        if (doctorRepository.existsById(id)){
-            doctorRepository.deleteById(id);
-            return true;
+    public boolean deleteDoctor(Long id) {
+        if (!doctorRepository.existsById(id)) {
+            throw new DoctorException.DoctorNotFoundException("Doctor not found with ID " + id);
         }
-        return false;
+        doctorRepository.deleteById(id);
+        return true;
     }
 
     public Doctor findDoctorByUserId(Long userId) {
-        return doctorRepository.findByUserId(userId).orElseThrow(null);
+        return doctorRepository.findByUserId(userId)
+                .orElseThrow(() -> new DoctorException.DoctorNotFoundException("Doctor not found for user ID: " + userId));
     }
 }

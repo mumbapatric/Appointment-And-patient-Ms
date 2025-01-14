@@ -1,17 +1,11 @@
 package project.Appointment.And.Patient.MS.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
-import project.Appointment.And.Patient.MS.model.Doctor;
-import project.Appointment.And.Patient.MS.model.Patient;
 import project.Appointment.And.Patient.MS.model.User;
 import project.Appointment.And.Patient.MS.service.DoctorService;
 import project.Appointment.And.Patient.MS.service.PatientService;
-import project.Appointment.And.Patient.MS.service.UserDetailsService;
 import project.Appointment.And.Patient.MS.service.UserService;
 
 import java.util.List;
@@ -19,56 +13,50 @@ import java.util.List;
 @RestController
 @RequestMapping("/user")
 public class UserController {
-    @Autowired
-    private UserService userService;
-    @Autowired
-    private DoctorService doctorService;
-    @Autowired
-    private PatientService patientService;
+
+    private final UserService userService;
+    private final DoctorService doctorService;
+    private final PatientService patientService;
+
+    // Constructor Injection more powerfl than @Autowired
+    public UserController(UserService userService, DoctorService doctorService, PatientService patientService) {
+        this.userService = userService;
+        this.doctorService = doctorService;
+        this.patientService = patientService;
+    }
+
     //add user
     @PostMapping
-    public ResponseEntity<String> addUser(@RequestBody User user){
-
+    public ResponseEntity<String> addUser(@RequestBody User user) {
         userService.addUser(user);
-        return ResponseEntity.status(201).body("user added successful");
+        return ResponseEntity.status(HttpStatus.CREATED).body("User added successfully");
     }
 
     // find all
     @GetMapping
-    public ResponseEntity<List<User>> findAll(){
+    public ResponseEntity<List<User>> findAll() {
         List<User> users = userService.findAll();
         return ResponseEntity.ok(users);
     }
 
-
     //find by id
     @GetMapping("/{id}")
-    public ResponseEntity<User> findById(@PathVariable Long id){
+    public ResponseEntity<User> findById(@PathVariable Long id) {
         User user = userService.findById(id);
-        if (user !=null){
-            return  ResponseEntity.ok(user);
-        }
-        return ResponseEntity.notFound().build();
+        return ResponseEntity.ok(user);
     }
 
     //update user
     @PutMapping("/{id}")
-    public ResponseEntity<User> updateUser(@PathVariable Long id, @RequestBody User user){
-        User users = userService.updateUser(id, user);
-        if (users != null){
-            return ResponseEntity.ok(users);
-        }
-        return ResponseEntity.notFound().build();
+    public ResponseEntity<User> updateUser(@PathVariable Long id, @RequestBody User user) {
+        User updatedUser = userService.updateUser(id, user);
+        return ResponseEntity.ok(updatedUser);
     }
 
     //delete user
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteUser(@PathVariable Long id){
+    public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
         boolean isDeleted = userService.deleteUser(id);
-        if (isDeleted){
-            return ResponseEntity.noContent().build();
-        }
-        return ResponseEntity.notFound().build();
+        return isDeleted ? ResponseEntity.noContent().build() : ResponseEntity.notFound().build();
     }
-
 }

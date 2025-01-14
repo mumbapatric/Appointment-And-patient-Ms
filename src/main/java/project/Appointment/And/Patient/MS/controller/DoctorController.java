@@ -1,5 +1,6 @@
 package project.Appointment.And.Patient.MS.controller;
-import org.springframework.beans.factory.annotation.Autowired;
+
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import project.Appointment.And.Patient.MS.model.Appointment;
@@ -11,66 +12,58 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/doctors")
 public class DoctorController {
-    @Autowired
-    private DoctorService doctorService;
+
+    private final DoctorService doctorService;
+
+    // Constructor Injection for dependencies
+    public DoctorController(DoctorService doctorService) {
+        this.doctorService = doctorService;
+    }
 
     //add doctor
-    @PostMapping public ResponseEntity<String> addDoctor(@RequestBody Doctor doctor){
+    @PostMapping
+    public ResponseEntity<String> addDoctor(@RequestBody Doctor doctor) {
         doctorService.addDoctor(doctor);
-        return ResponseEntity.status(201).body("doctor added successful");
-        }
+        return ResponseEntity.status(HttpStatus.CREATED).body("Doctor added successfully");
+    }
 
     @GetMapping("/dashboard/daily-schedule/{doctorId}")
     public ResponseEntity<List<Appointment>> getDailySchedule(@PathVariable Long doctorId) {
-        return ResponseEntity.ok(doctorService.getDailySchedule(doctorId)); }
+        List<Appointment> appointments = doctorService.getDailySchedule(doctorId);
+        return appointments.isEmpty() ? ResponseEntity.notFound().build() : ResponseEntity.ok(appointments);
+    }
 
     //find all
     @GetMapping
-
-    public ResponseEntity<List<Doctor>> findAll(){
+    public ResponseEntity<List<Doctor>> findAll() {
         List<Doctor> doctors = doctorService.findAll();
-        return ResponseEntity.ok(doctors);
+        return doctors.isEmpty() ? ResponseEntity.notFound().build() : ResponseEntity.ok(doctors);
     }
-
-
 
     //find by id
     @GetMapping("/{id}")
-    public ResponseEntity<Doctor> findById(@PathVariable Long id){
+    public ResponseEntity<Doctor> findById(@PathVariable Long id) {
         Doctor doctor = doctorService.findById(id);
-        if (doctor != null){
-            return ResponseEntity.ok(doctor);
-        }
-        return ResponseEntity.notFound().build();
+        return ResponseEntity.ok(doctor);
     }
 
     //find doctor by specialization
     @GetMapping("/specialization")
-    public ResponseEntity<List<Doctor>> findBySpecialization(@RequestParam String query){
+    public ResponseEntity<List<Doctor>> findBySpecialization(@RequestParam String query) {
         List<Doctor> doctors = doctorService.findBySpecialization(query);
-        if (doctors.isEmpty()){
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok(doctors);
+        return doctors.isEmpty() ? ResponseEntity.notFound().build() : ResponseEntity.ok(doctors);
     }
 
     //update doctor
     @PutMapping("/{id}")
-    public ResponseEntity<Doctor> updateDoctor(@PathVariable Long id ,@RequestBody Doctor doctor){
-        Doctor doctors = doctorService.updateDoctor(id, doctor);
-        if (doctors != null){
-            return ResponseEntity.ok(doctors);
-        }
-        return ResponseEntity.notFound().build();
+    public ResponseEntity<Doctor> updateDoctor(@PathVariable Long id, @RequestBody Doctor doctor) {
+        Doctor updatedDoctor = doctorService.updateDoctor(id, doctor);
+        return ResponseEntity.ok(updatedDoctor);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteDoctor(@PathVariable Long id){
+    public ResponseEntity<Void> deleteDoctor(@PathVariable Long id) {
         boolean isDeleted = doctorService.deleteDoctor(id);
-        if (isDeleted){
-            return ResponseEntity.noContent().build();
-        }
-        return ResponseEntity.notFound().build();
+        return isDeleted ? ResponseEntity.noContent().build() : ResponseEntity.notFound().build();
     }
-
 }
