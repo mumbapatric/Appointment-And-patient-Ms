@@ -26,8 +26,8 @@ spring:
   mail:
     host: smtp.gmail.com
     port: 587
-    username: ${email_user}
-    password: ${email_password}
+    username: joshuasirpatrickmumba@gmail.com
+    password: toly wxmt obmc xfoq
     properties:
       mail:
         smtp:
@@ -37,9 +37,9 @@ spring:
 
 twilio:
   account:
-    sid: ${sid}
+    sid: AC7f2b62835e802d83cdb7ae78a0fbe9ea
   auth:
-    token: ${token}
+    token: e23fd669156d660dd62853939d6e1ceb
   phone:
     number: +15677575781
 
