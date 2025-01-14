@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doctors - Doctor-Patient Appointment Booking</title>
+    <link rel="stylesheet" href="styles/doctors.css">
+    <style>
+        /* General Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            text-decoration: none;
+            list-style: none;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        /* Body Styling with Background Image */
+        body {
+            background: url('images/background.jpg') no-repeat center center fixed;
+            background-size: cover;
+            color: #333;
+            padding: 0;
+            font-size: 16px;
+        }
+
+        /* Header Section */
+        header {
+            width: 100%;
+            background-color: rgba(0, 110, 91, 0.8); /* Transparent green */
+            color: white;
+            text-align: center;
+            padding: 20px;
+            margin-bottom: 30px;
+            border-radius: 5px;
+        }
+
+        header h1 {
+            font-size: 36px;
+        }
+
+        /* Navigation Bar */
+        .navBar {
+            display: flex;
+            justify-content: center;
+            background-color: rgba(0, 110, 91, 0.8); /* Transparent green */
+            padding: 15px 0;
+            margin-bottom: 30px;
+            border-radius: 5px;
+        }
+
+        .navBar ul {
+            display: flex;
+        }
+
+        .navBar ul li {
+            margin: 0 20px;
+            position: relative;
+        }
+
+        .navBar ul li a {
+            color: #fff;
+            font-size: 18px;
+            text-transform: uppercase;
+            font-weight: bold;
+            padding: 10px 20px;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+            display: block;
+        }
+
+        .navBar ul li a:hover {
+            background-color: #004e40;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            transform: translateY(-5px);
+        }
+
+        .navBar ul li a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            background-color: #fff;
+            bottom: -5px;
+            left: 50%;
+            transition: width 0.3s ease, left 0.3s ease;
+        }
+
+        .navBar ul li a:hover::after {
+            width: 100%;
+            left: 0;
+        }
+
+        /* Doctors List Section */
+        .doctors-container {
+            display: flex;
+            justify-content: space-evenly;
+            flex-wrap: wrap;
+            margin-top: 50px;
+            padding: 0 30px;
+        }
+
+        .doctor-card {
+            width: 280px;
+            margin: 20px;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .doctor-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .doctor-card img {
+            width: 100%;
+            height: 200px;
+            border-radius: 5px;
+            object-fit: cover;
+            margin-bottom: 15px;
+        }
+
+        .doctor-card h3 {
+            font-size: 24px;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .doctor-card p {
+            color: #777;
+            font-size: 16px;
+            margin-bottom: 15px;
+        }
+
+        .doctor-card .specialty {
+            font-size: 18px;
+            color: #006e5b;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .doctor-card .location {
+            font-size: 16px;
+            color: #777;
+        }
+
+        /* Footer Section */
+        footer {
+            background-color: rgba(0, 110, 91, 0.8); /* Transparent green */
+            color: white;
+            text-align: center;
+            padding: 20px;
+            margin-top: 50px;
+        }
+
+        footer p {
+            font-size: 16px;
+        }
+
+        footer a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        footer a:hover {
+            color: #ffcf00;
+        }
+    </style>
+</head>
+<body>
+<!-- Header Section -->
+<header>
+    <h1>Doctor-Patient Appointment Booking</h1>
+</header>
+
+<!-- Navigation Bar -->
+<div class="navBar">
+    <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="register.html">Register</a></li>
+        <li><a href="login.html">Login</a></li>
+        <li><a href="doctors.html">Doctors</a></li>
+        <li><a href="appointment.html">Book Appointment</a></li>
+    </ul>
+</div>
+
+<!-- Doctors List Section -->
+<div class="doctors-container">
+    <!-- Doctor Card 1 -->
+    <div class="doctor-card">
+        <img src="images/doctor1.jpg" alt="Doctor">
+        <h3>Dr. John Doe</h3>
+        <p class="specialty">Pediatrician</p>
+        <p class="location">New York, USA</p>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec vehicula nisi et sapien ultricies.</p>
+        <a href="appointment.html" class="btn">Book Appointment</a>
+    </div>
+
+    <!-- Doctor Card 2 -->
+    <div class="doctor-card">
+        <img src="images/doctor2.jpg" alt="Doctor">
+        <h3>Dr. Jane Smith</h3>
+        <p class="specialty">Cardiologist</p>
+        <p class="location">Los Angeles, USA</p>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec vehicula nisi et sapien ultricies.</p>
+        <a href="appointment.html" class="btn">Book Appointment</a>
+    </div>
+
+    <!-- Doctor Card 3 -->
+    <div class="doctor-card">
+        <img src="images/doctor3.jpg" alt="Doctor">
+        <h3>Dr. Sarah Lee</h3>
+        <p class="specialty">Oncologist</p>
+        <p class="location">Chicago, USA</p>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec vehicula nisi et sapien ultricies.</p>
+        <a href="appointment.html" class="btn">Book Appointment</a>
+    </div>
+</div>
+
+<!-- Footer Section -->
+<footer>
+    <p>© 2024 Doctor-Patient Appointment Booking. All Rights Reserved.</p>
+    <p><a href="#">Privacy Policy</a> | <a href="#">Terms & Conditions</a></p>
+</footer>
+</body>
+</html>

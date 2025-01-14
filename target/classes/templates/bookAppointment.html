@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Appointment Booking</title>
+   <style></style>
+    <style>
+        /* Your existing CSS styles */
+    </style>
+</head>
+<body>
+<!-- Header Section -->
+<header>
+    <h1>Doctor-Patient Appointment Booking</h1>
+</header>
+
+<!-- Navigation Bar -->
+<div class="navBar">
+    <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="register.html">Register</a></li>
+        <li><a href="login.html">Login</a></li>
+        <li><a href="doctors.html">Doctors</a></li>
+        <li><a href="appointment.html">Book Appointment</a></li>
+    </ul>
+</div>
+
+<!-- Appointment Form Section -->
+<div class="appointment-container">
+    <h2>Book Your Appointment</h2>
+    <form id="appointment-form">
+        <!-- Patient Details -->
+        <div>
+            <label for="patient-name">Full Name</label>
+            <input type="text" id="patient-name" name="patient-name" placeholder="Enter Your Full Name" required>
+        </div>
+        <div>
+            <label for="patient-email">Email</label>
+            <input type="email" id="patient-email" name="patient-email" placeholder="Enter Your Email" required>
+        </div>
+        <div>
+            <label for="doctor-select">Select Doctor</label>
+            <select id="doctor-select" name="doctor-select" required>
+                <option value="">-- Select a Doctor --</option>
+                <option value="Dr. John Doe">Dr. John Doe</option>
+                <option value="Dr. Jane Smith">Dr. Jane Smith - Pediatrician</option>
+                <option value="Dr. Emily Green">Dr. Emily Green - Neurologist</option>
+                <option value="Dr. Michael White">Dr. Michael White - Dermatologist</option>
+                <!-- Add more doctors here -->
+            </select>
+        </div>
+        <div>
+            <label for="appointment-date">Preferred Date</label>
+            <input type="date" id="appointment-date" name="appointment-date" required>
+        </div>
+        <div>
+            <label for="appointment-time">Preferred Time</label>
+            <input type="time" id="appointment-time" name="appointment-time" required>
+        </div>
+        <div>
+            <label for="patient-message">Additional Notes</label>
+            <textarea id="patient-message" name="patient-message" placeholder="Any specific concerns?" rows="4"></textarea>
+        </div>
+        <div>
+            <input type="submit" value="Book Appointment">
+        </div>
+    </form>
+</div>
+
+<!-- Footer Section -->
+<footer>
+    <p>© 2024 Doctor-Patient Appointment Booking. All Rights Reserved.</p>
+    <p><a href="#">Privacy Policy</a> | <a href="#">Terms & Conditions</a></p>
+</footer>
+
+<script>
+    document.getElementById("appointment-form").addEventListener("submit", function(event) {
+        event.preventDefault();
+
+        // Collect form data
+        const patientName = document.getElementById("patient-name").value;
+        const patientEmail = document.getElementById("patient-email").value;
+        const doctor = document.getElementById("doctor-select").value;
+        const appointmentDate = document.getElementById("appointment-date").value;
+        const appointmentTime = document.getElementById("appointment-time").value;
+        const patientMessage = document.getElementById("patient-message").value;
+
+        // Prepare the data for the POST request
+        const appointmentData = {
+            patient: {
+                name: patientName,
+                email: patientEmail
+            },
+            doctor: {
+                name: doctor
+            },
+            date: appointmentDate,
+            time: appointmentTime,
+            message: patientMessage
+        };
+
+        // Send the data to the Spring Boot backend API using Fetch API
+        fetch("http://localhost:8080/api/v1/appointments", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(appointmentData)
+        })
+        .then(response => response.json())
+        .then(data => {
+            alert("Appointment booked successfully!");
+        })
+        .catch(error => {
+            console.error("Error:", error);
+            alert("Failed to book the appointment.");
+        });
+    });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home - Doctor-Patient Appointment Booking</title>
+    <link rel="stylesheet" href="styles/index.css">
+    <style>
+        /* General Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            text-decoration: none;
+            list-style: none;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        /* Body Styling with Background Image */
+        body {
+            background: url('images/background.jpg') no-repeat center fixed;
+            background-size: cover;
+            color: #333;
+            padding: 0;
+            font-size: 16px;
+        }
+
+        /* Header Section */
+        header {
+            width: 100%;
+            background-color: rgba(0, 110, 91, 0.8); /* Transparent green */
+            color: white;
+            text-align: center;
+            padding: 20px;
+            margin-bottom: 30px;
+            border-radius: 5px;
+        }
+
+        header h1 {
+            font-size: 36px;
+        }
+
+        /* Navigation Bar */
+        .navBar {
+            display: flex;
+            justify-content: center;
+            background-color: rgba(0, 110, 91, 0.8); /* Transparent green */
+            padding: 15px 0;
+            margin-bottom: 30px;
+            border-radius: 5px;
+        }
+
+        .navBar ul {
+            display: flex;
+        }
+
+        .navBar ul li {
+            margin: 0 20px;
+            position: relative;
+        }
+
+        .navBar ul li a {
+            color: #fff;
+            font-size: 18px;
+            text-transform: uppercase;
+            font-weight: bold;
+            padding: 10px 20px;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+            display: block;
+        }
+
+        .navBar ul li a:hover {
+            background-color: #004e40;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            transform: translateY(-5px);
+        }
+
+        .navBar ul li a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            background-color: #fff;
+            bottom: -5px;
+            left: 50%;
+            transition: width 0.3s ease, left 0.3s ease;
+        }
+
+        .navBar ul li a:hover::after {
+            width: 100%;
+            left: 0;
+        }
+
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            color: white;
+            padding: 100px 20px;
+            background-color: rgba(0, 110, 91, 0.7);
+            background-image: url('images/hero-image.jpg');
+            background-size: cover;
+            background-position: center;
+        }
+
+        .hero h2 {
+            font-size: 48px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .hero p {
+            font-size: 20px;
+            margin-bottom: 40px;
+        }
+
+        .hero .btn {
+            background-color: #006e5b;
+            color: white;
+            font-size: 18px;
+            padding: 15px 30px;
+            border-radius: 50px;
+            text-transform: uppercase;
+            font-weight: bold;
+            transition: background-color 0.3s;
+            text-decoration: none;
+        }
+
+        .hero .btn:hover {
+            background-color: #004e40;
+        }
+
+        /* Main Content Section */
+        .main-content {
+            display: flex;
+            justify-content: space-around;
+            padding: 50px 20px;
+            background-color: #f7f7f7;
+        }
+
+        .main-content .card {
+            background-color: white;
+            width: 30%;
+            padding: 30px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            text-align: center;
+            transition: transform 0.3s;
+        }
+
+        .main-content .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .main-content .card h3 {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        .main-content .card p {
+            font-size: 16px;
+            color: #555;
+            margin-bottom: 20px;
+        }
+
+        .main-content .card a {
+            color: #006e5b;
+            font-weight: bold;
+            font-size: 16px;
+            text-decoration: none;
+        }
+
+        /* Footer Section */
+        footer {
+            background-color: rgba(0, 110, 91, 0.8); /* Transparent green */
+            color: white;
+            text-align: center;
+            padding: 20px;
+            margin-top: 50px;
+        }
+
+        footer p {
+            font-size: 16px;
+        }
+
+        footer a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        footer a:hover {
+            color: #ffcf00;
+        }
+
+        /* Responsive Styling */
+        @media (max-width: 768px) {
+            .main-content {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .main-content .card {
+                width: 80%;
+                margin-bottom: 20px;
+            }
+
+            .hero h2 {
+                font-size: 36px;
+            }
+
+            .hero p {
+                font-size: 18px;
+            }
+        }
+    </style>
+</head>
+<body>
+<!-- Header Section -->
+<header>
+    <h1>Doctor-Patient Appointment Booking</h1>
+</header>
+
+<!-- Navigation Bar -->
+<div class="navBar">
+    <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="register.html">Register</a></li>
+        <li><a href="login.html">Login</a></li>
+        <li><a href="doctors.html">Doctors</a></li>
+        <li><a href="appointment.html">Book Appointment</a></li>
+    </ul>
+</div>
+
+<!-- Hero Section -->
+<div class="hero">
+    <h2>Welcome to the Doctor-Patient Appointment System</h2>
+    <p>Get in touch with experienced doctors for your health needs. Book your appointment easily online.</p>
+    <a href="appointment.html" class="btn">Book Appointment</a>
+</div>
+
+<!-- Main Content Section -->
+<div class="main-content">
+    <div class="card">
+        <h3>Find a Doctor</h3>
+        <p>Browse through a list of highly experienced doctors in various specialties.</p>
+        <a href="doctors.html">View Doctors</a>
+    </div>
+    <div class="card">
+        <h3>Book Your Appointment</h3>
+        <p>Choose a doctor and schedule your appointment with ease.</p>
+        <a href="appointment.html">Book Appointment</a>
+    </div>
+    <div class="card">
+        <h3>Patient Registration</h3>
+        <p>Create your profile to manage your health records and appointments.</p>
+        <a href="register.html">Register Now</a>
+    </div>
+</div>
+
+<!-- Footer Section -->
+<footer>
+    <p>© 2024 Doctor-Patient Appointment Booking. All Rights Reserved.</p>
+    <p><a href="#">Privacy Policy</a> | <a href="#">Terms & Conditions</a></p>
+</footer>
+</body>
+</html>
