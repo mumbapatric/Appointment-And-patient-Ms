@@ -1,0 +1,45 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/appointment_Ms
+    username: ${db_username}
+    password: ${db_password}
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
+  thymeleaf:
+    prefix: classpath:/templates/   # Location of your templates
+    suffix: .html                   # File extension for your templates
+    cache: false
+
+    jwt:
+      secret: 23467912f3288ec1873e25eee653f6fbaafe39c3751435afe56faf01fb2d34c7
+
+
+
+
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${email_user}
+    password: ${email_password}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
+twilio:
+  account:
+    sid: ${sid}
+  auth:
+    token: ${token}
+  phone:
+    number: +15677575781
+
