@@ -1,0 +1,14 @@
+{
+  "configurations": [
+    {
+      "type": "java",
+      "name": "Spring Boot-AppointmentAndPatientMsApplication<Appointment-And-Patient-MS>",
+      "request": "launch",
+      "cwd": "${workspaceFolder}",
+      "mainClass": "project.Appointment.And.Patient.MS.AppointmentAndPatientMsApplication",
+      "projectName": "Appointment-And-Patient-MS",
+      "args": "",
+      "envFile": "${workspaceFolder}/.env"
+    }
+  ]
+}

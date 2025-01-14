@@ -1,4 +1,7 @@
 spring:
+  profiles:
+    active: luca
+    
   datasource:
     url: jdbc:postgresql://localhost:5432/appointment_Ms
     username: ${db_username}

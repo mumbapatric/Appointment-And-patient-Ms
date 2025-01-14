@@ -1,11 +1,8 @@
 spring:
-  profiles:
-    active: luca
-    
   datasource:
     url: jdbc:postgresql://localhost:5432/appointment_Ms
-    username: ${db_username}
-    password: ${db_password}
+    username: postgres
+    password: admin
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
