@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 
 @Data
@@ -12,10 +13,10 @@ import org.springframework.http.ResponseEntity;
 @AllArgsConstructor
 public class ApiResponse<T> {
     private String status;     // "success" or "error"
-    private String message;    // General message (success or error message)
+    private String message;
     private T data;            // Actual data or null for errors
-    private String errorDetails; // Additional error details (null for success)
-    private int code;          // HTTP status code (e.g., 200, 404, etc.)
+    private String errorDetails;
+    private HttpStatusCode code;
 
 //    public ResponseEntity<T> getResponse( ){
 //        return ApiResponse.<T>builder()
