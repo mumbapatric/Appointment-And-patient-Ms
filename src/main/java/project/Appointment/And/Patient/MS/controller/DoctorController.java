@@ -3,9 +3,11 @@ package project.Appointment.And.Patient.MS.controller;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import project.Appointment.And.Patient.MS.dto.ApiResponse;
 import project.Appointment.And.Patient.MS.model.Appointment;
 import project.Appointment.And.Patient.MS.model.Doctor;
 import project.Appointment.And.Patient.MS.service.DoctorService;
+import project.Appointment.And.Patient.MS.util.ApiResponseBuilder;
 
 import java.util.List;
 
@@ -35,16 +37,24 @@ public class DoctorController {
 
     //find all
     @GetMapping
-    public ResponseEntity<List<Doctor>> findAll() {
+    public ResponseEntity<ApiResponse<List<Doctor>>> findAll() {
         List<Doctor> doctors = doctorService.findAll();
-        return doctors.isEmpty() ? ResponseEntity.notFound().build() : ResponseEntity.ok(doctors);
+
+        return ResponseEntity.ok(ApiResponseBuilder.buildSuccessResponse(
+                doctors,
+                HttpStatus.OK
+        ));
     }
 
     //find by id
     @GetMapping("/{id}")
-    public ResponseEntity<Doctor> findById(@PathVariable Long id) {
+    public ResponseEntity<ApiResponse<Doctor>> findById(@PathVariable Long id) {
         Doctor doctor = doctorService.findById(id);
-        return ResponseEntity.ok(doctor);
+
+        return ResponseEntity.ok(ApiResponseBuilder.buildSuccessResponse(
+                doctor,
+                HttpStatus.OK
+        ));
     }
 
     //find doctor by specialization

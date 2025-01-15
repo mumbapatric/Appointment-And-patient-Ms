@@ -4,109 +4,101 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import project.Appointment.And.Patient.MS.dto.ErrorResponse;
-
-import java.time.LocalDateTime;
+import project.Appointment.And.Patient.MS.dto.ApiResponse;
+import project.Appointment.And.Patient.MS.util.ApiResponseBuilder;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
     // --- User Exception Handlers ---
     @ExceptionHandler(UserException.UserNotFoundException.class)
-    public ResponseEntity<ErrorResponse> handleUserNotFoundException(UserException.UserNotFoundException ex) {
-        ErrorResponse errorResponse = new ErrorResponse(
-                LocalDateTime.now(),
-                HttpStatus.NOT_FOUND.value(),
-                "User Not Found",
+    public ResponseEntity<ApiResponse<Void>> handleUserNotFoundException(UserException.UserNotFoundException ex) {
+
+        ApiResponse<Void> errorResponse = ApiResponseBuilder.buildErrorResponse(
                 ex.getMessage(),
-                "User with the specified ID does not exist."
+                HttpStatus.NOT_FOUND
         );
-        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
     }
 
     @ExceptionHandler(UserException.UsernameAlreadyExistsException.class)
-    public ResponseEntity<ErrorResponse> handleUsernameAlreadyExistsException(UserException.UsernameAlreadyExistsException ex) {
-        ErrorResponse errorResponse = new ErrorResponse(
-                LocalDateTime.now(),
-                HttpStatus.BAD_REQUEST.value(),
-                "Username Conflict",
+    public ResponseEntity<ApiResponse<Void>> handleUsernameAlreadyExistsException(UserException.UsernameAlreadyExistsException ex) {
+
+        ApiResponse<Void> errorResponse = ApiResponseBuilder.buildErrorResponse(
                 ex.getMessage(),
-                "A user with the given username already exists."
+                HttpStatus.BAD_REQUEST
         );
-        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
     }
 
     @ExceptionHandler(UserException.EmailAlreadyExistsException.class)
-    public ResponseEntity<ErrorResponse> handleEmailAlreadyExistsException(UserException.EmailAlreadyExistsException ex) {
-        ErrorResponse errorResponse = new ErrorResponse(
-                LocalDateTime.now(),
-                HttpStatus.BAD_REQUEST.value(),
-                "Email Conflict",
+    public ResponseEntity<ApiResponse<Void>> handleEmailAlreadyExistsException(UserException.EmailAlreadyExistsException ex) {
+
+        ApiResponse<Void> errorResponse = ApiResponseBuilder.buildErrorResponse(
                 ex.getMessage(),
-                "A user with the given email already exists."
+                HttpStatus.NOT_FOUND
         );
-        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
     }
 
     @ExceptionHandler(UserException.InvalidPasswordException.class)
-    public ResponseEntity<ErrorResponse> handleInvalidPasswordException(UserException.InvalidPasswordException ex) {
-        ErrorResponse errorResponse = new ErrorResponse(
-                LocalDateTime.now(),
-                HttpStatus.BAD_REQUEST.value(),
-                "Invalid Password",
+    public ResponseEntity<ApiResponse<Void>> handleInvalidPasswordException(UserException.InvalidPasswordException ex) {
+
+        ApiResponse<Void> errorResponse = ApiResponseBuilder.buildErrorResponse(
                 ex.getMessage(),
-                "The provided password is invalid."
+                HttpStatus.NOT_FOUND
         );
-        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
     }
 
     // --- Doctor Exception Handlers ---
     @ExceptionHandler(DoctorException.DoctorNotFoundException.class)
-    public ResponseEntity<ErrorResponse> handleDoctorNotFoundException(DoctorException.DoctorNotFoundException ex) {
-        ErrorResponse errorResponse = new ErrorResponse(
-                LocalDateTime.now(),
-                HttpStatus.NOT_FOUND.value(),
-                "Doctor Not Found",
+    public ResponseEntity<ApiResponse<Void>> handleDoctorNotFoundException(DoctorException.DoctorNotFoundException ex) {
+
+        ApiResponse<Void> errorResponse = ApiResponseBuilder.buildErrorResponse(
                 ex.getMessage(),
-                "Doctor with the specified ID does not exist."
+                HttpStatus.NOT_FOUND
         );
-        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
     }
 
     @ExceptionHandler(DoctorException.DoctorAlreadyExistsException.class)
-    public ResponseEntity<ErrorResponse> handleDoctorAlreadyExistsException(DoctorException.DoctorAlreadyExistsException ex) {
-        ErrorResponse errorResponse = new ErrorResponse(
-                LocalDateTime.now(),
-                HttpStatus.BAD_REQUEST.value(),
-                "Doctor Conflict",
+    public ResponseEntity<ApiResponse<Void>> handleDoctorAlreadyExistsException(DoctorException.DoctorAlreadyExistsException ex) {
+
+        ApiResponse<Void> errorResponse = ApiResponseBuilder.buildErrorResponse(
                 ex.getMessage(),
-                "A doctor with the given email already exists."
+                HttpStatus.BAD_REQUEST
         );
-        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
     }
 
     @ExceptionHandler(DoctorException.InvalidEmailFormatException.class)
-    public ResponseEntity<ErrorResponse> handleInvalidDoctorEmailFormatException(DoctorException.InvalidEmailFormatException ex) {
-        ErrorResponse errorResponse = new ErrorResponse(
-                LocalDateTime.now(),
-                HttpStatus.BAD_REQUEST.value(),
-                "Invalid Doctor Email Format",
+    public ResponseEntity<ApiResponse<Void>> handleInvalidDoctorEmailFormatException(DoctorException.InvalidEmailFormatException ex) {
+
+        ApiResponse<Void> errorResponse = ApiResponseBuilder.buildErrorResponse(
                 ex.getMessage(),
-                "The provided email format for the doctor is invalid."
+                HttpStatus.BAD_REQUEST
         );
-        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+    }
+
+    @ExceptionHandler(DoctorException.NoDoctorsFoundException.class)
+    public ResponseEntity<ApiResponse<Void>> handleNoDoctorEmailFormatException(DoctorException.NoDoctorsFoundException ex) {
+        ApiResponse<Void> errorResponse = ApiResponseBuilder.buildErrorResponse(
+                ex.getMessage(),
+                HttpStatus.NOT_FOUND
+        );
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
     }
 
     // --- General Exception Handler (if no matching Exception) ---
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorResponse> handleGeneralException(Exception ex) {
-        ErrorResponse errorResponse = new ErrorResponse(
-                LocalDateTime.now(),
-                HttpStatus.INTERNAL_SERVER_ERROR.value(),
-                "Internal Server Error",
+    public ResponseEntity<ApiResponse<Void>> handleGeneralException(Exception ex) {
+
+        ApiResponse<Void> errorResponse = ApiResponseBuilder.buildErrorResponse(
                 ex.getMessage(),
-                "An unexpected error occurred."
+                HttpStatus.INTERNAL_SERVER_ERROR
         );
-        return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
     }
 }

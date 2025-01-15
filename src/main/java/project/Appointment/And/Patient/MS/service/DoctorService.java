@@ -55,11 +55,7 @@ public class DoctorService {
 
     //find all doctor
     public List<Doctor> findAll() {
-        List<Doctor> doctors = doctorRepository.findAll();
-//        if (doctors.isEmpty()) {
-//            throw new DoctorException.NoDoctorsFoundException("No doctors found in the system.");
-//        }
-        return doctors;
+        return doctorRepository.findAll();
     }
 
     // find by id
