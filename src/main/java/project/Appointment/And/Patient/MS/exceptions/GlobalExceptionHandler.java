@@ -36,9 +36,9 @@ public class GlobalExceptionHandler {
 
         ApiResponse<Void> errorResponse = ApiResponseBuilder.buildErrorResponse(
                 ex.getMessage(),
-                HttpStatus.NOT_FOUND
+                HttpStatus.BAD_REQUEST
         );
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
     }
 
     @ExceptionHandler(UserException.InvalidPasswordException.class)
@@ -46,9 +46,9 @@ public class GlobalExceptionHandler {
 
         ApiResponse<Void> errorResponse = ApiResponseBuilder.buildErrorResponse(
                 ex.getMessage(),
-                HttpStatus.NOT_FOUND
+                HttpStatus.BAD_REQUEST
         );
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
     }
 
     // --- Doctor Exception Handlers ---

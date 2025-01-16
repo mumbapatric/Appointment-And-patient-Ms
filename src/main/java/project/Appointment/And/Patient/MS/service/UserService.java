@@ -1,5 +1,7 @@
 package project.Appointment.And.Patient.MS.service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import project.Appointment.And.Patient.MS.exceptions.UserException;
@@ -12,6 +14,9 @@ import java.util.Optional;
 @Service
 public class UserService {
 
+    // Create a logger instance
+    private static final Logger log = LoggerFactory.getLogger(UserService.class);
+
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
@@ -23,17 +28,21 @@ public class UserService {
     // add user to Db
     public User addUser(User user) {
         // Use orElseThrow to avoid unnecessary ifChecks for username and email existence
+        log.info("++++++++++++++++++++++++++ CHECK USERNAME ++++++++++++++++++++++++");
         userRepository.findByUsername(user.getUsername())
                 .ifPresent(existingUser -> {
                     throw new UserException.UsernameAlreadyExistsException("Username already exists: " + user.getUsername());
                 });
 
+        log.info("++++++++++++++++++++++++++ CHECK EMAIL ++++++++++++++++++++++++");
         userRepository.findByEmail(user.getEmail())
                 .ifPresent(existingUser -> {
                     throw new UserException.EmailAlreadyExistsException("Email already exists: " + user.getEmail());
                 });
 
+        log.info("++++++++++++++++++++++++++ SAVE PASSWORD ++++++++++++++++++++++++");
         user.setPassword(passwordEncoder.encode(user.getPassword()));
+
         return userRepository.save(user);
     }
 

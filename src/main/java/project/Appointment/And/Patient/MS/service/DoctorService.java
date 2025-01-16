@@ -1,8 +1,11 @@
 package project.Appointment.And.Patient.MS.service;
 
+import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import project.Appointment.And.Patient.MS.dto.RegisterDoctorDTO;
 import project.Appointment.And.Patient.MS.exceptions.DoctorException;
+import project.Appointment.And.Patient.MS.exceptions.UserException;
 import project.Appointment.And.Patient.MS.model.Appointment;
 import project.Appointment.And.Patient.MS.model.Doctor;
 import project.Appointment.And.Patient.MS.model.User;
@@ -14,41 +17,32 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Service
+@AllArgsConstructor
 public class DoctorService {
 
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
+    private final UserService userService;
     private final DoctorRepository doctorRepository;
     private final AppointmentRepository appointmentRepository;
 
-    public DoctorService(PasswordEncoder passwordEncoder,
-                         UserRepository userRepository,
-                         DoctorRepository doctorRepository,
-                         AppointmentRepository appointmentRepository) {
-        this.passwordEncoder = passwordEncoder;
-        this.userRepository = userRepository;
-        this.doctorRepository = doctorRepository;
-        this.appointmentRepository = appointmentRepository;
-    }
 
     //add doctor
-    public Doctor addDoctor(Doctor doctor) {
-        // Check if email already exists for a doctor
-        doctorRepository.findByEmail(doctor.getEmail())
-                .ifPresent(existingDoctor -> {
-                    throw new DoctorException.DoctorAlreadyExistsException("Email already exists: " + doctor.getEmail());
-                });
+    public Doctor addDoctor(RegisterDoctorDTO userDoctor) {
 
-        String encodedPassword = passwordEncoder.encode(doctor.getPassword());
         User user = new User();
-        user.setUsername(doctor.getEmail());
-        user.setPassword(encodedPassword);
-        user.setEmail(doctor.getEmail());
+        user.setUsername(userDoctor.getUsername());
+        user.setPassword(userDoctor.getPassword());
+        user.setEmail(userDoctor.getEmail());
         user.setRoles(List.of(User.Role.DOCTOR));
+        User userCtd = userService.addUser(user);
 
-        userRepository.save(user);
-        doctor.setPassword(encodedPassword);
-        doctor.setUser(user);
+        // set user doctor
+        Doctor doctor = new Doctor();
+        doctor.setUser(userCtd);
+        doctor.setSpecialization(userDoctor.getSpecialization());
+        doctor.setLocation(userDoctor.getLocation());
+        // other doctor specific fields
 
         return doctorRepository.save(doctor);
     }
@@ -90,10 +84,10 @@ public class DoctorService {
         Doctor existingDoctor = doctorRepository.findById(id)
                 .orElseThrow(() -> new DoctorException.DoctorNotFoundException("Doctor not found with ID " + id));
 
-        existingDoctor.setName(updatedDoctor.getName());
+        existingDoctor.getUser().setName(updatedDoctor.getUser().getName());
         existingDoctor.setSpecialization(updatedDoctor.getSpecialization());
-        existingDoctor.setPhoneNumber(updatedDoctor.getPhoneNumber());
-        existingDoctor.setEmail(updatedDoctor.getEmail());
+        existingDoctor.getUser().setPhonenumber(updatedDoctor.getUser().getPhonenumber());
+        existingDoctor.getUser().setEmail(updatedDoctor.getUser().getEmail());
 
         return doctorRepository.save(existingDoctor);
     }

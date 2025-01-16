@@ -54,7 +54,7 @@ public class AppointmentService {
 
         // Construct the notification message
         String notificationMessage = "Your appointment is scheduled with Dr. " +
-                savedAppointment.getDoctor().getName() +
+                savedAppointment.getDoctor().getUser().getName() +
                 " on " + savedAppointment.getAppointmentDateTime() +
                 " at " + savedAppointment.getLocation();
 
@@ -64,11 +64,11 @@ public class AppointmentService {
 
         // Send SMS notification
         notificationService.sendSms(patient.getPhoneNumber(), notificationMessage);
-        notificationService.sendSms(doctor.getPhoneNumber(), notificationDoctor);
+        notificationService.sendSms(doctor.getUser().getPhonenumber(), notificationDoctor);
         // Send Email notification
         emailService.sendEmail(patient.getEmail(),
                 "Appointment Confirmation", notificationMessage);
-        emailService.sendEmail(doctor.getEmail(),"Appointment Confirmation"
+        emailService.sendEmail(doctor.getUser().getEmail(),"Appointment Confirmation"
         ,notificationDoctor);
 
         return savedAppointment;

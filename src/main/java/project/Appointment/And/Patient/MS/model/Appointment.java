@@ -32,7 +32,7 @@ public class Appointment {
     private Schedule schedule;
 
     public String getDoctorName() {
-        return doctor != null ? doctor.getName() : null;
+        return doctor != null ? doctor.getUser().getName() : null;
     }
 
     public enum AppointmentStatus {

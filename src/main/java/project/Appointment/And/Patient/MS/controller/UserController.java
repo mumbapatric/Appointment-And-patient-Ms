@@ -1,5 +1,7 @@
 package project.Appointment.And.Patient.MS.controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,6 +18,7 @@ import java.util.List;
 @RequestMapping("/user")
 public class UserController {
 
+    private static final Logger log = LoggerFactory.getLogger(UserService.class);
     private final UserService userService;
     private final DoctorService doctorService;
     private final PatientService patientService;
@@ -29,9 +32,13 @@ public class UserController {
 
     //add user
     @PostMapping
-    public ResponseEntity<String> addUser(@RequestBody User user) {
-        userService.addUser(user);
-        return ResponseEntity.status(HttpStatus.CREATED).body("User added successfully");
+    public ResponseEntity<ApiResponse<User>> addUser(@RequestBody User user) {
+        User userCreated = userService.addUser(user);
+
+        return ResponseEntity.ok(ApiResponseBuilder.buildSuccessResponse(
+                userCreated,
+                HttpStatus.CREATED
+        ));
     }
 
     // find all

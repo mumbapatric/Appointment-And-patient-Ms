@@ -32,22 +32,22 @@ public class ReminderService {
             // Send reminder to the patient
             String patientPhone = appointment.getPatientPhoneNumber();
             if (patientPhone != null && !patientPhone.isEmpty()) {
-                notificationService.sendSms(patientPhone, "Reminder: You have an appointment in 15 minutes with" + appointment.getDoctor().getName() + ".");
+                notificationService.sendSms(patientPhone, "Reminder: You have an appointment in 15 minutes with" + appointment.getDoctor().getUser().getName() + ".");
             } else {
                 // Log the issue for debugging purposes
                 System.err.println("Patient phone number is null or empty for appointment ID: " + appointment.getId());
             }
-            notificationService.sendEmail(appointment.getPatientEmail(), "Appointment Reminder", "Reminder: You have an appointment in 15 minutes with" + appointment.getDoctor().getName() + ".");
+            notificationService.sendEmail(appointment.getPatientEmail(), "Appointment Reminder", "Reminder: You have an appointment in 15 minutes with" + appointment.getDoctor().getUser().getName() + ".");
 
             // Send reminder to the doctor
-            String doctorPhone = appointment.getDoctor().getPhoneNumber();
+            String doctorPhone = appointment.getDoctor().getUser().getPhonenumber();
             if (doctorPhone != null && !doctorPhone.isEmpty()) {
                 notificationService.sendSms(doctorPhone, "Reminder: You have an appointment in 15 minutes with patient " + appointment.getPatient().getName() + ".");
             } else {
                 // Log the issue for debugging purposes
                 System.err.println("Doctor phone number is null or empty for appointment ID: " + appointment.getId());
             }
-            notificationService.sendEmail(appointment.getDoctor().getEmail(), "Appointment Reminder", "Reminder: You have an appointment in 15 minutes with patient " + appointment.getPatient().getName() + ".");
+            notificationService.sendEmail(appointment.getDoctor().getUser().getEmail(), "Appointment Reminder", "Reminder: You have an appointment in 15 minutes with patient " + appointment.getPatient().getName() + ".");
         }
     }
 }

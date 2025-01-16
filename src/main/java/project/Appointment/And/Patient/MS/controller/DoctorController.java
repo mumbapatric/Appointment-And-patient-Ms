@@ -4,6 +4,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import project.Appointment.And.Patient.MS.dto.ApiResponse;
+import project.Appointment.And.Patient.MS.dto.RegisterDoctorDTO;
 import project.Appointment.And.Patient.MS.model.Appointment;
 import project.Appointment.And.Patient.MS.model.Doctor;
 import project.Appointment.And.Patient.MS.service.DoctorService;
@@ -24,9 +25,12 @@ public class DoctorController {
 
     //add doctor
     @PostMapping
-    public ResponseEntity<String> addDoctor(@RequestBody Doctor doctor) {
-        doctorService.addDoctor(doctor);
-        return ResponseEntity.status(HttpStatus.CREATED).body("Doctor added successfully");
+    public ResponseEntity<ApiResponse<Doctor>> addDoctor(@RequestBody RegisterDoctorDTO doctor) {
+        Doctor doctorCreated = doctorService.addDoctor(doctor);
+        return ResponseEntity.ok(ApiResponseBuilder.buildSuccessResponse(
+                doctorCreated,
+                HttpStatus.CREATED
+        ));
     }
 
     @GetMapping("/dashboard/daily-schedule/{doctorId}")
