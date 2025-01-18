@@ -8,12 +8,12 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class RegisterDoctorDTO {
-    private String fname;
-    private String lname;
+    private String name;
     private String username;
     private String specialization;
     private String location;
     private String email;
-    private String phonenumber;
+    private String phoneNumber;
     private String password;
+    private Long hospitalId;
 }

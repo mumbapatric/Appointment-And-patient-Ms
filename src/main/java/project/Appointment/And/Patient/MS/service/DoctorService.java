@@ -6,12 +6,8 @@ import org.springframework.stereotype.Service;
 import project.Appointment.And.Patient.MS.dto.RegisterDoctorDTO;
 import project.Appointment.And.Patient.MS.exceptions.DoctorException;
 import project.Appointment.And.Patient.MS.exceptions.UserException;
-import project.Appointment.And.Patient.MS.model.Appointment;
-import project.Appointment.And.Patient.MS.model.Doctor;
-import project.Appointment.And.Patient.MS.model.User;
-import project.Appointment.And.Patient.MS.repository.AppointmentRepository;
-import project.Appointment.And.Patient.MS.repository.DoctorRepository;
-import project.Appointment.And.Patient.MS.repository.UserRepository;
+import project.Appointment.And.Patient.MS.model.*;
+import project.Appointment.And.Patient.MS.repository.*;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -25,6 +21,8 @@ public class DoctorService {
     private final UserService userService;
     private final DoctorRepository doctorRepository;
     private final AppointmentRepository appointmentRepository;
+    private final HospitalRepository hospitalRepository;
+    private final DoctorHospitalRepository doctorHospitalRepository;
 
 
     //add doctor
@@ -42,10 +40,22 @@ public class DoctorService {
         doctor.setUser(userCtd);
         doctor.setSpecialization(userDoctor.getSpecialization());
         doctor.setLocation(userDoctor.getLocation());
-        doctor.setPhoneNumber(userDoctor.getPhonenumber());
+        doctor.setPhoneNumber(userDoctor.getPhoneNumber());
+        doctor.setName(userDoctor.getName());
+        doctor.setEmail(userDoctor.getEmail());
+        Doctor savedDoctor = doctorRepository.save(doctor);
         // other doctor specific fields
 
-        return doctorRepository.save(doctor);
+        //doctor hospital association
+        Hospital hospital = hospitalRepository.findById(userDoctor.getHospitalId())
+                .orElseThrow(()-> new RuntimeException("hospital id not found"));
+
+        DoctorHospital doctorHospital = new DoctorHospital();
+        doctorHospital.setDoctor(savedDoctor);
+        doctorHospital.setHospital(hospital);
+        doctorHospitalRepository.save(doctorHospital);
+
+        return savedDoctor;
     }
 
     //find all doctor

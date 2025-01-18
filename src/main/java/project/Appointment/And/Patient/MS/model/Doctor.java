@@ -16,6 +16,10 @@ public class Doctor {
     @OneToOne
     @JoinColumn(name = "user_id")
     private User user;
+    @Column(nullable = false)
+    private String name;
+    @Column(nullable = false ,unique = true)
+    private String email;
     @Column(name = "specialization", nullable = false)
     private String specialization;
     @Column(name = "location", nullable = false)
