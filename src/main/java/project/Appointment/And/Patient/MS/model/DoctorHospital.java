@@ -14,10 +14,10 @@ public class DoctorHospital {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
-    @ManyToMany
+    @ManyToOne
     @JoinColumn(name = "doctor_id", nullable = false)
     private  Doctor doctor;
-    @ManyToMany
+    @ManyToOne
     @JoinColumn(name = "hospital_id", nullable = false)
     private Hospital hospital;
 }

@@ -58,7 +58,7 @@ public class SecurityConfig {
                                 "/schedule/**",
                                 "/api/v1/reminder/**",
                                 "/api/v1/patients/**",
-                                "/api/v1/appointments/**",
+                                "/api/v1/appointments/**","/api/v1/doctors/**",
                                 "/user/**",
                                 "/css/**",
                                 "/js/**",
