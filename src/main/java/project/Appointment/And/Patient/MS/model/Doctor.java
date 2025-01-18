@@ -20,4 +20,6 @@ public class Doctor {
     private String specialization;
     @Column(name = "location", nullable = false)
     private String location;
+    @Column(nullable = false)
+    private String phoneNumber;
 }

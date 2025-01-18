@@ -42,6 +42,7 @@ public class DoctorService {
         doctor.setUser(userCtd);
         doctor.setSpecialization(userDoctor.getSpecialization());
         doctor.setLocation(userDoctor.getLocation());
+        doctor.setPhoneNumber(userDoctor.getPhonenumber());
         // other doctor specific fields
 
         return doctorRepository.save(doctor);
