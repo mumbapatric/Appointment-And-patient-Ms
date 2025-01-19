@@ -13,7 +13,11 @@ import java.util.List;
 public class NotificationController {
 
     @Autowired
-    private NotificationService notificationService;
+    private final NotificationService notificationService;
+
+    public NotificationController(NotificationService notificationService) {
+        this.notificationService = notificationService;
+    }
 
     //add notification
     @PostMapping

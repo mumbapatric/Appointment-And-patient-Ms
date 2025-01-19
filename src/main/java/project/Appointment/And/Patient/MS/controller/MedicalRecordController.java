@@ -11,8 +11,12 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/medicalRecords")
 public class MedicalRecordController {
-    @Autowired
-    private MedicalRecordService medicalRecordService;
+
+    private final MedicalRecordService medicalRecordService;
+
+    public MedicalRecordController(MedicalRecordService medicalRecordService) {
+        this.medicalRecordService = medicalRecordService;
+    }
 
     // add records
     @PostMapping

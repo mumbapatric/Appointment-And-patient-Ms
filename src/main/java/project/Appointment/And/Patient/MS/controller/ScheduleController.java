@@ -11,8 +11,12 @@ import java.util.List;
 @RestController
 @RequestMapping("/schedule")
 public class ScheduleController {
-    @Autowired
-    private ScheduleService scheduleService;
+
+    private final ScheduleService scheduleService;
+
+    public ScheduleController(ScheduleService scheduleService) {
+        this.scheduleService = scheduleService;
+    }
 
     //add schedule
     @PostMapping

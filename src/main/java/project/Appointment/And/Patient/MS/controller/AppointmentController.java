@@ -18,15 +18,15 @@ import java.util.List;
 public class AppointmentController {
 
     private static final Logger logger = LoggerFactory.getLogger(AppointmentController.class);
+    private final AppointmentService appointmentService;
+    private final NotificationService notificationService;
+    private final DoctorRepository doctorRepository;
 
-    @Autowired
-    private AppointmentService appointmentService;
-
-    @Autowired
-    private NotificationService notificationService;
-
-    @Autowired
-    private DoctorRepository doctorRepository;
+    public AppointmentController(AppointmentService appointmentService, NotificationService notificationService, DoctorRepository doctorRepository) {
+        this.appointmentService = appointmentService;
+        this.notificationService = notificationService;
+        this.doctorRepository = doctorRepository;
+    }
 
     // Add appointment (book)
     @PostMapping

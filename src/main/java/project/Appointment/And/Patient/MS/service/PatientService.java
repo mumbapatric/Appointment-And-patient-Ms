@@ -3,6 +3,7 @@ package project.Appointment.And.Patient.MS.service;
 import org.springframework.data.jpa.repository.support.JpaRepositoryImplementation;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import project.Appointment.And.Patient.MS.dto.RegisterPatientDTO;
 import project.Appointment.And.Patient.MS.model.Appointment;
 import project.Appointment.And.Patient.MS.model.MedicalRecord;
 import project.Appointment.And.Patient.MS.model.Patient;
@@ -22,27 +23,35 @@ public class PatientService {
     private final PatientRepository patientRepository;
     private final AppointmentRepository appointmentRepository;
     private final MedicalRecordRepository medicalRecordRepository;
+    private final UserService userService;
 
-    public PatientService(PasswordEncoder passwordEncoder, UserRepository userRepository, PatientRepository patientRepository, AppointmentRepository appointmentRepository, MedicalRecordRepository medicalRecordRepository) {
+    public PatientService(PasswordEncoder passwordEncoder, UserRepository userRepository, PatientRepository patientRepository, AppointmentRepository appointmentRepository, MedicalRecordRepository medicalRecordRepository, UserService userService) {
         this.passwordEncoder = passwordEncoder;
         this.userRepository = userRepository;
         this.patientRepository = patientRepository;
         this.medicalRecordRepository = medicalRecordRepository;
         this.appointmentRepository = appointmentRepository;
+        this.userService = userService;
     }
 
     //add Patient
-    public Patient addPatient(Patient patient){
-        String encodedPassword = passwordEncoder.encode(patient.getPassword());
+    public Patient addPatient(RegisterPatientDTO patient){
         User user = new User();
-        user.setUsername(patient.getEmail());
-        user.setPassword(encodedPassword);
-        user.setEmail(patient.getEmail());
-        user.setRoles(List.of(User.Role.PATIENT));
-        patient.setPassword(encodedPassword);
-        userRepository.save(user);
-        patient.setUser(user);
-        return patientRepository.save(patient);
+       user.setUsername(patient.getUsername());
+       user.setPassword(patient.getPassword());
+       user.setEmail(patient.getEmail());
+       user.setRoles(List.of(User.Role.PATIENT));
+       User userPatient = userService.addUser(user);
+
+       Patient patients = new Patient();
+       patients.setUser(userPatient);
+       patients.setName(patient.getName());
+       patients.setAddress(patient.getAddress());
+       patients.setEmail(patient.getEmail());
+       patients.setGender(patient.getGender());
+       patients.setPhoneNumber(patient.getPhoneNumber());
+       return patientRepository.save(patients);
+
     }
 
     //find all

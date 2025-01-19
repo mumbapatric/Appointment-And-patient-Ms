@@ -23,7 +23,7 @@ public class UserController {
     private final DoctorService doctorService;
     private final PatientService patientService;
 
-    // Constructor Injection more powerfl than @Autowired
+    // Constructor Injection more powerful than @Autowired
     public UserController(UserService userService, DoctorService doctorService, PatientService patientService) {
         this.userService = userService;
         this.doctorService = doctorService;

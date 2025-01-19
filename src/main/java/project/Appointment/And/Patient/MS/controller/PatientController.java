@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
+import project.Appointment.And.Patient.MS.dto.RegisterPatientDTO;
 import project.Appointment.And.Patient.MS.model.Appointment;
 import project.Appointment.And.Patient.MS.model.MedicalRecord;
 import project.Appointment.And.Patient.MS.model.Patient;
@@ -14,12 +15,16 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/patients")
 public class PatientController {
-    @Autowired
-    private PatientService patientService;
+
+    private final PatientService patientService;
+
+    public PatientController(PatientService patientService) {
+        this.patientService = patientService;
+    }
 
     //add patient
     @PostMapping
-    public ResponseEntity<String> createPatient(@RequestBody Patient patient) {
+    public ResponseEntity<String> createPatient(@RequestBody RegisterPatientDTO patient) {
         Patient patients = patientService.addPatient(patient);
         return ResponseEntity.status(201).body("patient added successful");
     }

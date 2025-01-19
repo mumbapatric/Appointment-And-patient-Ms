@@ -9,8 +9,12 @@ import project.Appointment.And.Patient.MS.service.ReminderService;
 @RequestMapping("/api/v1/reminder")
 public class ReminderController {
 
-    @Autowired
-    private ReminderService reminderService;
+
+    private final ReminderService reminderService;
+
+    public ReminderController(ReminderService reminderService) {
+        this.reminderService = reminderService;
+    }
 
     @GetMapping("/send")
     public ResponseEntity<String> sendReminders() {
