@@ -97,7 +97,7 @@ public class DoctorService {
 
         existingDoctor.getUser().setName(updatedDoctor.getUser().getName());
         existingDoctor.setSpecialization(updatedDoctor.getSpecialization());
-        existingDoctor.getUser().setPhonenumber(updatedDoctor.getUser().getPhonenumber());
+        existingDoctor.getUser().setPhoneNumber(updatedDoctor.getUser().getPhoneNumber());
         existingDoctor.getUser().setEmail(updatedDoctor.getUser().getEmail());
 
         return doctorRepository.save(existingDoctor);

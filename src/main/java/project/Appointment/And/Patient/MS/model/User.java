@@ -33,7 +33,7 @@ public class User implements UserDetails {
     private String password;
 
     @Column(name = "phonenumber")
-    private String phonenumber;
+    private String phoneNumber;
 
     @Column(unique = true, nullable = false)
     private String email;

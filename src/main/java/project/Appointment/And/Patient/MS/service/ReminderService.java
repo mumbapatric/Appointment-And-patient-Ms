@@ -40,7 +40,7 @@ public class ReminderService {
             notificationService.sendEmail(appointment.getPatientEmail(), "Appointment Reminder", "Reminder: You have an appointment in 15 minutes with" + appointment.getDoctor().getUser().getName() + ".");
 
             // Send reminder to the doctor
-            String doctorPhone = appointment.getDoctor().getUser().getPhonenumber();
+            String doctorPhone = appointment.getDoctor().getUser().getPhoneNumber();
             if (doctorPhone != null && !doctorPhone.isEmpty()) {
                 notificationService.sendSms(doctorPhone, "Reminder: You have an appointment in 15 minutes with patient " + appointment.getPatient().getName() + ".");
             } else {

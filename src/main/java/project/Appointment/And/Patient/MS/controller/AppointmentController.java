@@ -118,7 +118,7 @@ public class AppointmentController {
     public ResponseEntity<Void> deleteAppointment(@PathVariable Long id) {
         Appointment appointment = appointmentService.findById(id);
         if (appointment != null) {
-            notificationService.sendSms(appointment.getDoctor().getUser().getPhonenumber(), "An appointment has been cancelled.");
+            notificationService.sendSms(appointment.getDoctor().getUser().getPhoneNumber(), "An appointment has been cancelled.");
             notificationService.sendEmail(appointment.getDoctor().getUser().getEmail(), "Appointment Cancellation", "An appointment has been cancelled.");
 
             boolean isDeleted = appointmentService.deleteAppointment(id);

@@ -64,7 +64,7 @@ public class AppointmentService {
 
         // Send SMS notification
         notificationService.sendSms(patient.getPhoneNumber(), notificationMessage);
-        notificationService.sendSms(doctor.getUser().getPhonenumber(), notificationDoctor);
+        notificationService.sendSms(doctor.getUser().getPhoneNumber(), notificationDoctor);
         // Send Email notification
         emailService.sendEmail(patient.getEmail(),
                 "Appointment Confirmation", notificationMessage);
