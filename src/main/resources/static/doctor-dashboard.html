@@ -289,7 +289,7 @@ function displayPatients(patients) {
 // Fetch all appointments data from the backend
 async function fetchAppointments() {
     try {
-        let response = await fetch('http://localhost:8080/api/v1/appointments');
+        let response = await fetch('http://localhost:8080/api/v1/appointments/doctor/{doctorId}');
         if (!response.ok) {
             throw new Error('Network response was not ok ' + response.statusText);
         }

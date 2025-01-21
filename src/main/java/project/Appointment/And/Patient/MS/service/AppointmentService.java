@@ -107,7 +107,7 @@ public class AppointmentService {
 
     // Find by doctor
     public List<Appointment> findByDoctor(Long id) {
-        return appointmentRepository.findByDoctor_Id(id);
+        return appointmentRepository.findByDoctorId(id);
     }
 
     // Update appointment
