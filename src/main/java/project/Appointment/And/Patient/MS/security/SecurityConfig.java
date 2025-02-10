@@ -48,7 +48,7 @@ public class SecurityConfig {
                 .cors().configurationSource(corsConfigurationSource())
                 .and()
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/v1/auth/**").permitAll() // Public API endpoints
+                        .requestMatchers("/api/v1/auth/**").permitAll()
 //                        .requestMatchers("/admin/**").hasRole("ADMIN")
 //                        .requestMatchers("/api/v1/doctors/**").hasRole("DOCTOR")
                         .requestMatchers(
