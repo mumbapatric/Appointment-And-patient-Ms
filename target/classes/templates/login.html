@@ -152,6 +152,7 @@
     </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/jwt-decode/build/jwt-decode.min.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         document.getElementById('auth-form').addEventListener('submit', async (event) => {
@@ -170,6 +171,7 @@
                     body: JSON.stringify({ username, password })
                 });
 
+                console.log('Response:', response);
                 console.log('Request URL:', response.url);
                 console.log('Status Code:', response.status);
 
@@ -179,6 +181,11 @@
 
                     localStorage.setItem('token', data.token);
                     localStorage.setItem('role', data.role);
+
+                    const decodedToken = jwt_decode(data.token);
+                    const userId = decodedToken.userId;
+                    localStorage.setItem('userId', userId);
+
                     alert('Login successful');
 
                     if (data.role === 'ROLE_DOCTOR') {

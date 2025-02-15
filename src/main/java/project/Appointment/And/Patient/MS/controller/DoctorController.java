@@ -68,6 +68,11 @@ public class DoctorController {
         return doctors.isEmpty() ? ResponseEntity.notFound().build() : ResponseEntity.ok(doctors);
     }
 
+//get doctor by user id
+    @GetMapping("/user/{userId}")
+    public Doctor getDoctorByUserId(@PathVariable Long userId) {
+        return doctorService.getDoctorByUserId(userId);
+    }
     //update doctor
     @PutMapping("/{id}")
     public ResponseEntity<Doctor> updateDoctor(@PathVariable Long id, @RequestBody Doctor doctor) {
