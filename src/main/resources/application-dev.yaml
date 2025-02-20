@@ -43,3 +43,11 @@ twilio:
   phone:
     number: +15677575781
 
+# API DOC
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+  api-docs:
+    path: /v3/api-docs
+
+
