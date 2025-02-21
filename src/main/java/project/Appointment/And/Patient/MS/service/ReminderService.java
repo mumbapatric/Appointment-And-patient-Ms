@@ -25,7 +25,7 @@ public class ReminderService {
         LocalDateTime reminderTime = now.plusMinutes(15);
 
         // Find appointments that are scheduled for 15 minutes from now
-        List<Appointment> appointments = appointmentRepository.findByAppointmentDateTime(reminderTime);
+        List<Appointment> appointments = appointmentRepository.findByTime(reminderTime);
 
         // Send reminders to each appointment
         for (Appointment appointment : appointments) {

@@ -23,7 +23,7 @@ public class PatientController {
     }
 
     //add patient
-    @PostMapping
+    @PostMapping("/register")
     public ResponseEntity<String> createPatient(@RequestBody RegisterPatientDTO patient) {
         Patient patients = patientService.addPatient(patient);
         return ResponseEntity.status(201).body("patient added successful");
@@ -48,6 +48,16 @@ public class PatientController {
     @GetMapping("/{id}")
     public ResponseEntity<Patient> findById(@PathVariable Long id) {
         Patient patient = patientService.findById(id);
+        if (patient != null) {
+            return ResponseEntity.ok(patient);
+        }
+        return ResponseEntity.notFound().build();
+    }
+
+    //find patient by user id
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<Patient> findByUserId(@PathVariable Long userId) {
+        Patient patient = patientService.findPatientByUserId(userId);
         if (patient != null) {
             return ResponseEntity.ok(patient);
         }

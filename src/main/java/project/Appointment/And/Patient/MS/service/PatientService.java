@@ -48,6 +48,7 @@ public class PatientService {
        patients.setName(patient.getName());
        patients.setAddress(patient.getAddress());
        patients.setEmail(patient.getEmail());
+       patients.setDob(patient.getDob());
        patients.setGender(patient.getGender());
        patients.setPhoneNumber(patient.getPhoneNumber());
        return patientRepository.save(patients);

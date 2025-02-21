@@ -19,8 +19,8 @@ public class Patient {
     @JoinColumn(name = "user_id")
     private User user;
     private String name;
-    private LocalDate dateOfBirth;
     private String gender;
+    private LocalDate dob;
     private String email;
     private String password;
     @Column(name = "phone_number")

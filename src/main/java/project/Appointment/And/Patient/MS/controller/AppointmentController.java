@@ -15,6 +15,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/appointments")
+@CrossOrigin(origins = "http://127.0.0.1:5500")
 public class AppointmentController {
 
     private static final Logger logger = LoggerFactory.getLogger(AppointmentController.class);
@@ -50,6 +51,16 @@ public class AppointmentController {
     @GetMapping("/{id}")
     public ResponseEntity<Appointment> findById(@PathVariable Long id) {
         Appointment appointment = appointmentService.findById(id);
+        if (appointment != null) {
+            return ResponseEntity.ok(appointment);
+        }
+        return ResponseEntity.notFound().build();
+    }
+
+    //update appointment
+    @PutMapping("/{id}")
+    public ResponseEntity<Appointment> updateAppointment(@PathVariable Long id, @RequestBody Appointment updatedAppointment) {
+        Appointment appointment = appointmentService.updateAppointment(id, updatedAppointment);
         if (appointment != null) {
             return ResponseEntity.ok(appointment);
         }

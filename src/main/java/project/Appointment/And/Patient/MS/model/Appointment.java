@@ -8,6 +8,8 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -16,7 +18,7 @@ public class Appointment {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
-    private LocalDateTime appointmentDateTime;
+    private LocalTime time;
     @Enumerated(EnumType.STRING)
     private AppointmentStatus status;
     @ManyToOne

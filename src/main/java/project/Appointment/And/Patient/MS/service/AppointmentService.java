@@ -1,6 +1,5 @@
 package project.Appointment.And.Patient.MS.service;
 
-import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 import project.Appointment.And.Patient.MS.model.Appointment;
 import project.Appointment.And.Patient.MS.model.Doctor;
@@ -55,11 +54,11 @@ public class AppointmentService {
         // Construct the notification message
         String notificationMessage = "Your appointment is scheduled with Dr. " +
                 savedAppointment.getDoctor().getUser().getName() +
-                " on " + savedAppointment.getAppointmentDateTime() +
+                " on " + savedAppointment.getTime() + savedAppointment.getDate() +
                 " at " + savedAppointment.getLocation();
 
         String notificationDoctor = "Dear Doctor you have appointment with" +   savedAppointment
-                .getPatient().getName()  +  " on " + savedAppointment.getAppointmentDateTime() +
+                .getPatient().getName()  +  " on " + savedAppointment.getTime() +savedAppointment.getDate() +
                 " at " + savedAppointment.getLocation() + "kindly check schedule to confirm or cancel";
 
         // Send SMS notification
@@ -114,7 +113,7 @@ public class AppointmentService {
     public Appointment updateAppointment(Long id, Appointment updatedAppointment) {
         Appointment existingAppointment = appointmentRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Appointment not found " + id));
-        existingAppointment.setAppointmentDateTime(updatedAppointment.getAppointmentDateTime());
+        existingAppointment.setTime(updatedAppointment.getTime());
         existingAppointment.setPatient(updatedAppointment.getPatient());
         existingAppointment.setSchedule(updatedAppointment.getSchedule());
         existingAppointment.setLocation(updatedAppointment.getLocation());
@@ -134,9 +133,9 @@ public class AppointmentService {
 
     // Find appointments for today
     public List<Appointment> findAppointmentsForToday() {
-        LocalDateTime startOfDay = LocalDateTime.now().with(LocalTime.MIN);
+        LocalTime startOfDay = LocalTime.now().with(LocalTime.MIN);
         LocalDateTime endOfDay = LocalDateTime.now().with(LocalTime.MAX);
-        return appointmentRepository.findByAppointmentDateTimeBetween(startOfDay, endOfDay);
+        return appointmentRepository.findByTimeBetween(startOfDay, endOfDay);
     }
 
     // Update appointment status
