@@ -42,7 +42,7 @@ public class JwtService {
         return Keys.hmacShaKeyFor(SECRET_KEY.getBytes());
     }
 
-    public String generateToken(UserDetails userDetails, Long userId) {
+    public String generateToken(UserDetails userDetails, Long userId,String name) {
         // Store roles as strings in the token
         List<String> roles = userDetails.getAuthorities().stream()
                 .map(authority -> authority.getAuthority())
@@ -51,6 +51,7 @@ public class JwtService {
         return Jwts.builder()
                 .setSubject(userDetails.getUsername())
                 .claim("userId", userId)
+                .claim("name", name)
                 .claim("roles", roles) // Add roles as a list of strings
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24)) // Valid for 10 hours

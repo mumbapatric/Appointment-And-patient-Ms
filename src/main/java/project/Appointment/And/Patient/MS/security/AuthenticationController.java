@@ -42,11 +42,12 @@ public class AuthenticationController {
             SecurityContextHolder.getContext().setAuthentication(authentication);
             UserDetails userDetails = (UserDetails) authentication.getPrincipal();
 
-            // Find user ID using email
+            // Find user ID and name using username
             User user = userService.findByUsername(userDetails.getUsername());
+            String name = user.getName();
 
-            // Generate JWT with user details and user ID
-            String jwt = jwtService.generateToken(userDetails, user.getId());
+            // Generate JWT with user details, user ID, and name
+            String jwt = jwtService.generateToken(userDetails, user.getId(), name);
 
             // Return the response
             HttpHeaders headers = new HttpHeaders();
@@ -60,7 +61,6 @@ public class AuthenticationController {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
     }
-
     @GetMapping("/me")
     public ResponseEntity<?> getCurrentUserDetails(@RequestHeader("Authorization") String authHeader) {
         try {

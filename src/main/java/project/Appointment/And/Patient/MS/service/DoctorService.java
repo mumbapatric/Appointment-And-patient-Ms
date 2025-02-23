@@ -31,6 +31,8 @@ public class DoctorService {
         User user = new User();
         user.setUsername(userDoctor.getUsername());
         user.setPassword(userDoctor.getPassword());
+        user.setPhoneNumber(userDoctor.getPhoneNumber());
+        user.setName(userDoctor.getName());
         user.setEmail(userDoctor.getEmail());
         user.setRoles(List.of(User.Role.DOCTOR));
         User userCtd = userService.addUser(user);

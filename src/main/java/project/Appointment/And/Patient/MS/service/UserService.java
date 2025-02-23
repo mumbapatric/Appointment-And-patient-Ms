@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import project.Appointment.And.Patient.MS.dto.ChangePassword;
 import project.Appointment.And.Patient.MS.exceptions.UserException;
 import project.Appointment.And.Patient.MS.model.User;
 import project.Appointment.And.Patient.MS.repository.UserRepository;
@@ -91,4 +92,17 @@ public class UserService {
         return userRepository.findByUsername(username)
                 .orElseThrow(() -> new UserException.UserNotFoundException("User not found with username: " + username));
     }
+
+    public User changePassword(String email, ChangePassword request) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found with email: " + email));
+
+        if (passwordEncoder.matches(request.getOldPassword(), user.getPassword())) {
+            user.setPassword(passwordEncoder.encode(request.getNewPassword()));
+            return userRepository.save(user);
+        }
+
+        throw new RuntimeException("Old password is incorrect");
+    }
+
 }

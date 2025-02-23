@@ -27,6 +27,7 @@ public class Appointment {
     @ManyToOne
     @JoinColumn(name = "doctor_id")
     private Doctor doctor;
+    private String fees;
     private LocalDate date;
     private String location;
     @ManyToOne

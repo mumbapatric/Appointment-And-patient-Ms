@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import project.Appointment.And.Patient.MS.dto.ApiResponse;
+import project.Appointment.And.Patient.MS.dto.ChangePassword;
 import project.Appointment.And.Patient.MS.model.User;
 import project.Appointment.And.Patient.MS.service.DoctorService;
 import project.Appointment.And.Patient.MS.service.PatientService;
@@ -15,7 +16,7 @@ import project.Appointment.And.Patient.MS.util.ApiResponseBuilder;
 import java.util.List;
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/api/v1/users")
 public class UserController {
 
     private static final Logger log = LoggerFactory.getLogger(UserService.class);
@@ -73,5 +74,12 @@ public class UserController {
     public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
         boolean isDeleted = userService.deleteUser(id);
         return isDeleted ? ResponseEntity.noContent().build() : ResponseEntity.notFound().build();
+    }
+
+    // change password
+    @PutMapping("/change-password")
+    public ResponseEntity<String> changePassword(@RequestParam String email,@RequestBody ChangePassword request){
+        User user = userService.changePassword(email, request);
+        return ResponseEntity.ok("Password updated successfully");
     }
 }

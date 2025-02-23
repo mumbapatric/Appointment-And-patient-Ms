@@ -22,7 +22,6 @@ public class Patient {
     private String gender;
     private LocalDate dob;
     private String email;
-    private String password;
     @Column(name = "phone_number")
     private String phoneNumber;
     private String address;

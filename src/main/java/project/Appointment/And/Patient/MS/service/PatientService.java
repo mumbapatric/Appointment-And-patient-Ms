@@ -40,6 +40,8 @@ public class PatientService {
        user.setUsername(patient.getUsername());
        user.setPassword(patient.getPassword());
        user.setEmail(patient.getEmail());
+       user.setPhoneNumber(patient.getPhoneNumber());
+       user.setName(patient.getName());
        user.setRoles(List.of(User.Role.PATIENT));
        User userPatient = userService.addUser(user);
 
