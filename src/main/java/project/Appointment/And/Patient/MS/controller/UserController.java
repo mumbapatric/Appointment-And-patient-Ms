@@ -9,6 +9,7 @@ import project.Appointment.And.Patient.MS.dto.ApiResponse;
 import project.Appointment.And.Patient.MS.dto.ChangePassword;
 import project.Appointment.And.Patient.MS.model.User;
 import project.Appointment.And.Patient.MS.service.DoctorService;
+import project.Appointment.And.Patient.MS.service.PasswordResetService;
 import project.Appointment.And.Patient.MS.service.PatientService;
 import project.Appointment.And.Patient.MS.service.UserService;
 import project.Appointment.And.Patient.MS.util.ApiResponseBuilder;
@@ -23,12 +24,14 @@ public class UserController {
     private final UserService userService;
     private final DoctorService doctorService;
     private final PatientService patientService;
+    private final PasswordResetService passwordResetService;
 
     // Constructor Injection more powerful than @Autowired
-    public UserController(UserService userService, DoctorService doctorService, PatientService patientService) {
+    public UserController(UserService userService, DoctorService doctorService, PatientService patientService, PasswordResetService passwordResetService) {
         this.userService = userService;
         this.doctorService = doctorService;
         this.patientService = patientService;
+        this.passwordResetService = passwordResetService;
     }
 
     //add user
@@ -77,9 +80,21 @@ public class UserController {
     }
 
     // change password
-    @PutMapping("/change-password")
-    public ResponseEntity<String> changePassword(@RequestParam String email,@RequestBody ChangePassword request){
-        User user = userService.changePassword(email, request);
+    @PutMapping("/{id}/change-password")
+    public ResponseEntity<String> changePassword(@PathVariable Long id,@RequestBody ChangePassword request){
+        User user = userService.changePassword(id, request);
         return ResponseEntity.ok("Password updated successfully");
+    }
+
+    @PostMapping("/forgot-password")
+    public ResponseEntity<String> forgotPassword(@RequestParam String email) {
+        passwordResetService.generateToken(email);
+        return ResponseEntity.ok("Password reset link sent to your email");
+    }
+
+    @PostMapping("/reset-password")
+    public ResponseEntity<String> resetPassword(@RequestParam String token, @RequestParam String newPassword) {
+        passwordResetService.resetPassword(token, newPassword);
+        return ResponseEntity.ok("Password reset successful");
     }
 }

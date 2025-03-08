@@ -15,7 +15,6 @@ import java.util.List;
 @Service
 @AllArgsConstructor
 public class DoctorService {
-
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
     private final UserService userService;
@@ -23,8 +22,7 @@ public class DoctorService {
     private final AppointmentRepository appointmentRepository;
     private final HospitalRepository hospitalRepository;
     private final DoctorHospitalRepository doctorHospitalRepository;
-
-
+    
     //add doctor
     public Doctor addDoctor(RegisterDoctorDTO userDoctor) {
 
@@ -117,5 +115,9 @@ public class DoctorService {
     public Doctor findDoctorByUserId(Long userId) {
         return doctorRepository.findByUserId(userId)
                 .orElseThrow(() -> new DoctorException.DoctorNotFoundException("Doctor not found for user ID: " + userId));
+    }
+
+    public Long getTotalDoctors() {
+        return doctorRepository.count();
     }
 }

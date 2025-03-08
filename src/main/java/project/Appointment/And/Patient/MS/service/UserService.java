@@ -8,9 +8,7 @@ import project.Appointment.And.Patient.MS.dto.ChangePassword;
 import project.Appointment.And.Patient.MS.exceptions.UserException;
 import project.Appointment.And.Patient.MS.model.User;
 import project.Appointment.And.Patient.MS.repository.UserRepository;
-
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class UserService {
@@ -62,18 +60,9 @@ public class UserService {
     public User updateUser(Long id, User updatedUser) {
         User existingUser = userRepository.findById(id)
                 .orElseThrow(() -> new UserException.UserNotFoundException("User not found with id " + id));
-
-        // Use Optional to check password and avoid redundant ifCheck
-        Optional.ofNullable(updatedUser.getPassword())
-                .filter(password -> !password.isEmpty())
-                .ifPresentOrElse(
-                        password -> existingUser.setPassword(passwordEncoder.encode(password)),
-                        () -> {
-                            throw new UserException.InvalidPasswordException("Password cannot be null or empty.");
-                        }
-                );
-
+        existingUser.setName(updatedUser.getName());
         existingUser.setEmail(updatedUser.getEmail());
+        existingUser.setPhoneNumber(updatedUser.getPhoneNumber());
         return userRepository.save(existingUser);
     }
 
@@ -93,11 +82,11 @@ public class UserService {
                 .orElseThrow(() -> new UserException.UserNotFoundException("User not found with username: " + username));
     }
 
-    public User changePassword(String email, ChangePassword request) {
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("User not found with email: " + email));
+    public User changePassword(Long id, ChangePassword request) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("User not found with email: " + id));
 
-        if (passwordEncoder.matches(request.getOldPassword(), user.getPassword())) {
+        if (passwordEncoder.matches(request.getCurrentPassword(), user.getPassword())) {
             user.setPassword(passwordEncoder.encode(request.getNewPassword()));
             return userRepository.save(user);
         }
