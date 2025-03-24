@@ -1,5 +1,6 @@
 package project.Appointment.And.Patient.MS.service;
 
+import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import project.Appointment.And.Patient.MS.dto.RegisterAdminDTO;
@@ -43,6 +44,21 @@ public class AdminService {
 
     public Long getTotalPatients() {
         return userRepository.count();
+    }
+
+    //create default admin
+    @PostConstruct
+    public void createDefaultAdmin(){
+        if (userRepository.findByUsername("admin").isEmpty()){
+            RegisterAdminDTO adminDTO = new RegisterAdminDTO();
+            adminDTO.setUsername("admin");
+            adminDTO.setPassword("12345");
+            adminDTO.setEmail("pongezinyemba@gmail.com");
+            adminDTO.setName("Pongezi Nyemba");
+            adminDTO.setPhoneNumber("0755555555");
+            addAdmin(adminDTO);
+            
+        }
     }
 
     // create admin
