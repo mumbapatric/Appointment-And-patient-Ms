@@ -1,5 +1,6 @@
 package project.Appointment.And.Patient.MS.controller;
 
+import jakarta.transaction.Transactional;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,6 +15,7 @@ import project.Appointment.And.Patient.MS.service.DoctorService;
 import project.Appointment.And.Patient.MS.util.ApiResponseBuilder;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1/admin")
@@ -90,21 +92,25 @@ public class AdminController {
     }
 
     // delete doctor
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Boolean> deleteDoctor(@PathVariable Long id){
-        return ResponseEntity.ok(doctorService.deleteDoctor(id));
+    @Transactional
+    @DeleteMapping
+    public ResponseEntity<Void> deleteDoctor(@RequestParam String email) {
+        boolean isDeleted = doctorService.deleteDoctor(email);
+        return isDeleted ? ResponseEntity.noContent().build() : ResponseEntity.notFound().build();
     }
 
-    // Admin creates an announcement
-    @PostMapping("/createAnnouncement")
-    public ResponseEntity<Announcement> createAnnouncement(@RequestParam String title, @RequestParam String message) {
-        Announcement announcement = announcementService.createAnnouncement(title, message);
-        return ResponseEntity.ok(announcement);
+
+    @PostMapping("/announcement")
+    public ResponseEntity<?> create(@RequestBody Map<String, String> req) {
+        Announcement a = announcementService.createAnnouncement(req.get("message"));
+        return ResponseEntity.ok(a);
     }
 
-    // Get all announcements (All users)
-    @GetMapping("/announcements")
-    public ResponseEntity<List<Announcement>> getAnnouncements() {
-        return ResponseEntity.ok(announcementService.getAllAnnouncements());
+    // Users fetch the latest active announcement
+    @GetMapping("/latest")
+    public ResponseEntity<?> getLatest() {
+        return announcementService.getLatestActive()
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.noContent().build());
     }
 }

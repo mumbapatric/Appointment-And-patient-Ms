@@ -17,15 +17,9 @@ public class Announcement {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
-
-    private String title;
     private String message;
+    @Column(name = "is_active")
+    private  boolean isActive = true;
+    private LocalDateTime createdAt= LocalDateTime.now();
 
-    @Column(nullable = false, updatable = false)
-    private LocalDateTime createdAt;
-
-    @PrePersist
-    protected void onCreate() {
-        this.createdAt = LocalDateTime.now();
     }
-}

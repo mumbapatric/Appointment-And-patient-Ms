@@ -1,30 +1,26 @@
 package project.Appointment.And.Patient.MS.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import project.Appointment.And.Patient.MS.model.Announcement;
 import project.Appointment.And.Patient.MS.repository.AnnouncementRepository;
 
-import java.util.List;
+import java.util.Optional;
 
 @Service
 public class AnnouncementService {
 
-    private final AnnouncementRepository announcementRepository;
+    @Autowired
+    private AnnouncementRepository repository;
 
-    public AnnouncementService(AnnouncementRepository announcementRepository) {
-        this.announcementRepository = announcementRepository;
+    public Announcement createAnnouncement(String message) {
+        Announcement a = new Announcement();
+        a.setMessage(message);
+        a.setActive(true);
+        return repository.save(a);
     }
 
-    // Admin creates an announcement
-    public Announcement createAnnouncement(String title, String message) {
-        Announcement announcement = new Announcement();
-        announcement.setTitle(title);
-        announcement.setMessage(message);
-        return announcementRepository.save(announcement);
-    }
-
-    // Get all announcements (visible to all users)
-    public List<Announcement> getAllAnnouncements() {
-        return announcementRepository.findByOrderByCreatedAtDesc();
+    public Optional<Announcement> getLatestActive() {
+        return repository.findTopByIsActiveTrueOrderByCreatedAtDesc();
     }
 }

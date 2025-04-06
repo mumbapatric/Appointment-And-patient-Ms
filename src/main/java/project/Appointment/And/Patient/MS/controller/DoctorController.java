@@ -1,5 +1,6 @@
 package project.Appointment.And.Patient.MS.controller;
 
+import jakarta.transaction.Transactional;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -80,9 +81,11 @@ public class DoctorController {
         return ResponseEntity.ok(updatedDoctor);
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteDoctor(@PathVariable Long id) {
-        boolean isDeleted = doctorService.deleteDoctor(id);
+    @Transactional
+    @DeleteMapping
+    public ResponseEntity<Void> deleteDoctor(@RequestParam String email) {
+        boolean isDeleted = doctorService.deleteDoctor(email);
         return isDeleted ? ResponseEntity.noContent().build() : ResponseEntity.notFound().build();
     }
+
 }

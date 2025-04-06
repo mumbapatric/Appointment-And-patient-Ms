@@ -4,15 +4,19 @@ import org.springframework.stereotype.Service;
 import project.Appointment.And.Patient.MS.model.Appointment;
 import project.Appointment.And.Patient.MS.model.Doctor;
 import project.Appointment.And.Patient.MS.model.Patient;
+import project.Appointment.And.Patient.MS.report.ExcelReportGenerator;
+import project.Appointment.And.Patient.MS.report.PdfReportGenerator;
 import project.Appointment.And.Patient.MS.repository.AppointmentRepository;
 import project.Appointment.And.Patient.MS.repository.DoctorRepository;
 import project.Appointment.And.Patient.MS.repository.NotificationRepository;
 import project.Appointment.And.Patient.MS.repository.PatientRepository;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class AppointmentService {
@@ -21,13 +25,17 @@ public class AppointmentService {
     private final AppointmentRepository appointmentRepository;
     private final DoctorRepository doctorRepository;
     private final EmailService emailService;
+    private final PdfReportGenerator pdfReportGenerator;
+    private final ExcelReportGenerator excelReportGenerator;
 
-    public AppointmentService(NotificationRepository notificationRepository, NotificationService notificationService, PatientRepository patientRepository, AppointmentRepository appointmentRepository, DoctorRepository doctorRepository, EmailService emailService) {
+    public AppointmentService(NotificationRepository notificationRepository, NotificationService notificationService, PatientRepository patientRepository, AppointmentRepository appointmentRepository, DoctorRepository doctorRepository, EmailService emailService, PdfReportGenerator pdfReportGenerator, ExcelReportGenerator excelReportGenerator) {
         this.notificationService = notificationService;
         this.patientRepository = patientRepository;
         this.appointmentRepository = appointmentRepository;
         this.doctorRepository = doctorRepository;
         this.emailService = emailService;
+        this.pdfReportGenerator = pdfReportGenerator;
+        this.excelReportGenerator = excelReportGenerator;
     }
 
     public Appointment addAppointment(Appointment appointment) {
@@ -146,5 +154,23 @@ public class AppointmentService {
             return appointmentRepository.save(appointment);
         }
         return null;
+    }
+
+    public byte[] generateAppointmentReport(String format) throws IOException {
+        List<Appointment> appointments = appointmentRepository.findAll();
+
+        List<Map<String, Object>> data = appointments.stream().map(a -> Map.of(
+                "ID",(Object) a.getId(),
+                "Patient",(Object) a.getPatient().getName(),
+                "Doctor",(Object) a.getDoctor().getName(),
+                "Date",(Object) a.getDate().toString(),
+                "Status",(Object) a.getStatus()
+        )).toList();
+
+        if (format.equalsIgnoreCase("pdf")) {
+            return pdfReportGenerator.generate(data, "Appointments Report");
+        } else {
+            return excelReportGenerator.generate(data, "Appointments Report");
+        }
     }
 }

@@ -1,5 +1,6 @@
 package project.Appointment.And.Patient.MS.service;
 
+import com.sun.jdi.StringReference;
 import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -104,13 +105,16 @@ public class DoctorService {
     }
 
     //delete doctor
-    public boolean deleteDoctor(Long id) {
-        if (!doctorRepository.existsById(id)) {
-            throw new DoctorException.DoctorNotFoundException("Doctor not found with ID " + id);
-        }
-        doctorRepository.deleteById(id);
+    public boolean deleteDoctor(String email) {
+        Doctor doctor = doctorRepository.findByEmail(email)
+                .orElseThrow(() -> new DoctorException.DoctorNotFoundException("Doctor not found with email " + email));
+        appointmentRepository.deleteByDoctorId(doctor.getId());
+        doctorHospitalRepository.deleteByDoctorId(doctor.getId());
+        userRepository.deleteByDoctorId(doctor.getId());
+        doctorRepository.delete(doctor);
         return true;
     }
+
 
     public Doctor findDoctorByUserId(Long userId) {
         return doctorRepository.findByUserId(userId)
