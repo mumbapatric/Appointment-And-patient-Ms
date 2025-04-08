@@ -3,6 +3,7 @@ package project.Appointment.And.Patient.MS.controller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +14,7 @@ import project.Appointment.And.Patient.MS.service.AppointmentService;
 import project.Appointment.And.Patient.MS.service.DoctorService;
 import project.Appointment.And.Patient.MS.service.NotificationService;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -146,17 +148,20 @@ public class AppointmentController {
     }
 
     @GetMapping("/report")
-    public ResponseEntity<byte[]> generateAppointmentReport(@RequestParam String format) throws IOException {
-        byte[] report = appointmentService.generateAppointmentReport(format);
+    public ResponseEntity<?> generateAppointmentReport(
+            @RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+            @RequestParam("endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
+            @RequestParam("format") String format
+    ) throws IOException {
+        byte[] report = appointmentService.generateAppointmentReport(startDate, endDate, format);
 
-        String filename = "appointment_report." + (format.equalsIgnoreCase("pdf") ? "pdf" : "xlsx");
-        String contentType = format.equalsIgnoreCase("pdf")
-                ? "application/pdf"
-                : "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+        String contentType = format.equalsIgnoreCase("pdf") ? "application/pdf" : "application/vnd.ms-excel";
+        String fileName = "appointments_report." + format;
 
         return ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + filename)
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + fileName)
                 .contentType(MediaType.parseMediaType(contentType))
                 .body(report);
     }
+
 }

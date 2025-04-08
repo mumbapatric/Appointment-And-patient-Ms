@@ -156,13 +156,12 @@ public class AppointmentService {
         return null;
     }
 
-    public byte[] generateAppointmentReport(String format) throws IOException {
-        List<Appointment> appointments = appointmentRepository.findAll();
-
+    public byte[] generateAppointmentReport(LocalDate startDate, LocalDate endDate, String format) throws IOException {
+        List<Appointment>appointments = appointmentRepository.findByDateBetween(startDate, endDate);
         List<Map<String, Object>> data = appointments.stream().map(a -> Map.of(
-                "ID",(Object) a.getId(),
-                "Patient",(Object) a.getPatient().getName(),
-                "Doctor",(Object) a.getDoctor().getName(),
+                "Patient Username",(Object) a.getPatient().getUser().getUsername(),
+                "Patient Name",(Object) a.getPatient().getName(),
+                "Doctor Name",(Object) a.getDoctor().getName(),
                 "Date",(Object) a.getDate().toString(),
                 "Status",(Object) a.getStatus()
         )).toList();
