@@ -3,9 +3,10 @@ package project.Appointment.And.Patient.MS;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 @SpringBootApplication
-@ComponentScan(basePackages = "project.Appointment.And.Patient.MS")
+@EnableScheduling
 public class AppointmentAndPatientMsApplication {
 
 	public static void main(String[] args) {

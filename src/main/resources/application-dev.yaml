@@ -18,7 +18,7 @@ spring:
     cache: false
 
     jwt:
-      secret: 23467912f3288ec1873e25eee653f6fbaafe39c3751435afe56faf01fb2d34c7
+      secret-key: ${JWT_SECRET_KEY}
 
 
 

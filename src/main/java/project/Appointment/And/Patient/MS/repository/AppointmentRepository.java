@@ -1,6 +1,8 @@
 package project.Appointment.And.Patient.MS.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import project.Appointment.And.Patient.MS.model.Appointment;
 
@@ -21,6 +23,11 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
     void deleteByDoctorId(Long doctorId);
     List<Appointment> findByDateBetween(LocalDate startDate, LocalDate endDate);
     List<Appointment> findByTimeBetween(LocalTime startOfDay, LocalDateTime endOfDay);
-
+    @Query("SELECT a FROM Appointment a WHERE a.date = :date AND a.time BETWEEN :startTime AND :endTime AND a.status = :status")
+    List<Appointment> findByDateAndTimeBetweenAndStatus(
+            @Param("date") LocalDate date,
+            @Param("startTime") LocalTime startTime,
+            @Param("endTime") LocalTime endTime,
+            @Param("status") Appointment.AppointmentStatus status);
 }
 

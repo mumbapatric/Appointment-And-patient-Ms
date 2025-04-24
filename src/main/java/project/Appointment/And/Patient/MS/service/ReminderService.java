@@ -1,53 +1,76 @@
 package project.Appointment.And.Patient.MS.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import project.Appointment.And.Patient.MS.model.Appointment;
 import project.Appointment.And.Patient.MS.repository.AppointmentRepository;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 
 @Service
 public class ReminderService {
 
-    @Autowired
-    private NotificationService notificationService;
+    private final NotificationService notificationService;
+    private final AppointmentRepository appointmentRepository;
 
-    @Autowired
-    private AppointmentRepository appointmentRepository;
+    public ReminderService(NotificationService notificationService, AppointmentRepository appointmentRepository) {
+        this.notificationService = notificationService;
+        this.appointmentRepository = appointmentRepository;
+    }
 
-    @Scheduled(cron = "0 * * * * ?") // Run every minute
+    @Scheduled(cron = "0 * * * * ?")
     public void sendReminders() {
-        // Get the current time and calculate the 15-minute window
-        LocalDateTime now = LocalDateTime.now();
-        LocalDateTime reminderTime = now.plusMinutes(15);
+        // Get the current date
+        LocalDate today = LocalDate.now();
+        // Calculate time 15 minutes from now
+        LocalTime reminderTime = LocalDateTime.now().plusMinutes(15).toLocalTime();
+        // Define a 1-minute range around the reminder time
+        LocalTime startTime = reminderTime.minusMinutes(1);
+        LocalTime endTime = reminderTime.plusMinutes(1);
 
-        // Find appointments that are scheduled for 15 minutes from now
-        List<Appointment> appointments = appointmentRepository.findByTime(reminderTime);
+        System.out.println("Reminder Date: " + today);
+        System.out.println("Reminder Time Range: " + startTime + " to " + endTime);
 
-        // Send reminders to each appointment
+        // Query appointments by date, time range, and CONFIRMED status
+        List<Appointment> appointments = appointmentRepository.findByDateAndTimeBetweenAndStatus(
+                today,
+                startTime,
+                endTime,
+                Appointment.AppointmentStatus.CONFIRMED
+        );
+
+        if (appointments.isEmpty()) {
+            System.out.println("No confirmed appointments found for date: " + today + " and time: " + reminderTime);
+            return; // Exit if no appointments were found
+        }
+
+        // Send reminders for each appointment
         for (Appointment appointment : appointments) {
-            // Send reminder to the patient
+            String patientName = appointment.getPatient() != null ? appointment.getPatient().getName() : "Patient";
             String patientPhone = appointment.getPatientPhoneNumber();
-            if (patientPhone != null && !patientPhone.isEmpty()) {
-                notificationService.sendSms(patientPhone, "Reminder: You have an appointment in 15 minutes with" + appointment.getDoctor().getUser().getName() + ".");
-            } else {
-                // Log the issue for debugging purposes
-                System.err.println("Patient phone number is null or empty for appointment ID: " + appointment.getId());
-            }
-            notificationService.sendEmail(appointment.getPatientEmail(), "Appointment Reminder", "Reminder: You have an appointment in 15 minutes with" + appointment.getDoctor().getUser().getName() + ".");
+            String doctorName = appointment.getDoctorName();
 
-            // Send reminder to the doctor
-            String doctorPhone = appointment.getDoctor().getUser().getPhoneNumber();
-            if (doctorPhone != null && !doctorPhone.isEmpty()) {
-                notificationService.sendSms(doctorPhone, "Reminder: You have an appointment in 15 minutes with patient " + appointment.getPatient().getName() + ".");
-            } else {
-                // Log the issue for debugging purposes
-                System.err.println("Doctor phone number is null or empty for appointment ID: " + appointment.getId());
-            }
-            notificationService.sendEmail(appointment.getDoctor().getUser().getEmail(), "Appointment Reminder", "Reminder: You have an appointment in 15 minutes with patient " + appointment.getPatient().getName() + ".");
+            // Send reminders to patients
+          /*  if (patientPhone != null && !patientPhone.isEmpty()) {
+                notificationService.sendSms(patientPhone, "Hi " + patientName + ", you have an appointment in 15 minutes with Dr. " + doctorName + ".");
+            }*/
+            notificationService.sendEmail(appointment.getPatientEmail(),
+                    "Appointment Reminder",
+                    "Hi " + patientName + ", you have an appointment in 15 minutes with Dr. " + doctorName + ".");
+
+            // Send reminders to doctors
+            String doctorPhone = (appointment.getDoctor() != null && appointment.getDoctor().getUser() != null) ?
+                    appointment.getDoctor().getUser().getPhoneNumber() : null;
+
+          /*  if (doctorPhone != null && !doctorPhone.isEmpty()) {
+                notificationService.sendSms(doctorPhone, "Dr. " + doctorName + ", you have an appointment in 15 minutes with patient " + patientName + ".");
+            }*/
+            notificationService.sendEmail(appointment.getDoctor().getUser().getEmail(),
+                    "Appointment Reminder",
+                    "Dr. " + doctorName + ", you have an appointment in 15 minutes with patient " + patientName + ".");
         }
     }
 }

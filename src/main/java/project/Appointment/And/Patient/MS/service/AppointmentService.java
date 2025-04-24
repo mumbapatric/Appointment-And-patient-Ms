@@ -1,3 +1,4 @@
+
 package project.Appointment.And.Patient.MS.service;
 
 import org.springframework.stereotype.Service;
@@ -76,7 +77,7 @@ public class AppointmentService {
         emailService.sendEmail(patient.getEmail(),
                 "Appointment Confirmation", notificationMessage);
         emailService.sendEmail(doctor.getUser().getEmail(),"Appointment Confirmation"
-        ,notificationDoctor);
+                ,notificationDoctor);
 
         return savedAppointment;
     }
