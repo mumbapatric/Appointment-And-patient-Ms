@@ -39,7 +39,7 @@ public class MedicalRecordController {
         return ResponseEntity.ok(medicalRecords);
     }
 
-    //get all id
+    //get by id
     @GetMapping("/{id}")
     public ResponseEntity<MedicalRecord> findById(@PathVariable Long id){
         MedicalRecord medicalRecord = medicalRecordService.findById(id);

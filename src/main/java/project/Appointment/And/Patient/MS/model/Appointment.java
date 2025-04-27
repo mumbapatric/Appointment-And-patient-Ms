@@ -34,6 +34,7 @@ public class Appointment {
     @JoinColumn(name = "schedule_id")
     private Schedule schedule;
 
+
     public String getDoctorName() {
         return doctor != null ? doctor.getUser().getName() : null;
     }
