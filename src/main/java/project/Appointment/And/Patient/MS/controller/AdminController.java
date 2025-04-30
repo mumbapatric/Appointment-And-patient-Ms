@@ -19,7 +19,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1/admin")
-public class AdminController {
+public class  AdminController {
 
     private final AdminService adminService;
     private final DoctorService doctorService;

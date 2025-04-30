@@ -22,9 +22,9 @@ public class NotificationService {
     public void sendEmail(String to, String subject, String text) {
         emailService.sendEmail(to, subject, text);
     }
-    public void sendSms(String to, String message) {
+  /*  public void sendSms(String to, String message) {
         smsService.sendSms(to, message);
-    }
+    }*/
 
 
     // add notification

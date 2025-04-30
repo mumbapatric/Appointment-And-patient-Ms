@@ -45,6 +45,10 @@ public class MedicalRecordService {
         return medicalRecordRepository.findByPatientId(id);
     }
 
+    //find by doctor id
+    public List<MedicalRecord> findByDoctorId(Long id){
+        return medicalRecordRepository.findByDoctorId(id);
+    }
     //find all medical record
     public List<MedicalRecord> findAll(){
        return medicalRecordRepository.findAll();

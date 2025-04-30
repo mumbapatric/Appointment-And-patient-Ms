@@ -19,7 +19,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/appointments")
-@CrossOrigin(origins = "http://127.0.0.1:5500")
 public class AppointmentController {
 
     private static final Logger logger = LoggerFactory.getLogger(AppointmentController.class);
@@ -39,7 +38,7 @@ public class AppointmentController {
         logger.info("Received appointment: {}", appointment);
         Appointment savedAppointment = appointmentService.addAppointment(appointment);
 
-        notificationService.sendSms(savedAppointment.getPatientPhoneNumber(), "Your appointment is scheduled with ");
+       // notificationService.sendSms(savedAppointment.getPatientPhoneNumber(), "Your appointment is scheduled with ");
         notificationService.sendEmail(savedAppointment.getPatientEmail(), "Appointment Confirmation", "Your appointment is scheduled.");
         return ResponseEntity.ok("Appointment added successfully");
     }
@@ -97,7 +96,7 @@ public class AppointmentController {
     public ResponseEntity<String> cancelAppointment(@PathVariable Long id) {
         Appointment updatedAppointment = appointmentService.updateAppointmentStatus(id, Appointment.AppointmentStatus.CANCEL);
         if (updatedAppointment != null) {
-            notificationService.sendSms(updatedAppointment.getPatientPhoneNumber(), "Your appointment has been cancelled by doctor.");
+           // notificationService.sendSms(updatedAppointment.getPatientPhoneNumber(), "Your appointment has been cancelled by doctor.");
             notificationService.sendEmail(updatedAppointment.getPatientEmail(), "Appointment Cancelled", "Your appointment has been cancelled.");
             return ResponseEntity.ok("Appointment cancelled successfully");
         }
@@ -109,7 +108,7 @@ public class AppointmentController {
     public ResponseEntity<String> confirmAppointment(@PathVariable Long id) {
         Appointment updatedAppointment = appointmentService.updateAppointmentStatus(id, Appointment.AppointmentStatus.CONFIRMED);
         if (updatedAppointment != null) {
-            notificationService.sendSms(updatedAppointment.getPatientPhoneNumber(), "Your appointment has been confirmed by the doctor.");
+           // notificationService.sendSms(updatedAppointment.getPatientPhoneNumber(), "Your appointment has been confirmed by the doctor.");
             notificationService.sendEmail(updatedAppointment.getPatientEmail(), "Appointment Confirmed", "Your appointment has been confirmed by the doctor.");
             return ResponseEntity.ok("Appointment confirmed successfully");
         }
@@ -121,7 +120,7 @@ public class AppointmentController {
     public ResponseEntity<String> rejectAppointment(@PathVariable Long id) {
         Appointment updatedAppointment = appointmentService.updateAppointmentStatus(id, Appointment.AppointmentStatus.CANCEL);
         if (updatedAppointment != null) {
-            notificationService.sendSms(updatedAppointment.getPatientPhoneNumber(), "Your appointment has been rejected by the doctor.");
+           // notificationService.sendSms(updatedAppointment.getPatientPhoneNumber(), "Your appointment has been rejected by the doctor.");
             notificationService.sendEmail(updatedAppointment.getPatientEmail(), "Appointment Rejected", "Your appointment has been rejected by the doctor.");
             return ResponseEntity.ok("Appointment rejected successfully");
         }
@@ -133,8 +132,8 @@ public class AppointmentController {
     public ResponseEntity<Void> deleteAppointment(@PathVariable Long id) {
         Appointment appointment = appointmentService.findById(id);
         if (appointment != null) {
-            notificationService.sendSms(appointment.getDoctor().getPhoneNumber(), "An appointment has been cancelled.");
-            notificationService.sendSms(appointment.getPatient().getPhoneNumber(), "An appointment has been cancelled.");
+          //  notificationService.sendSms(appointment.getDoctor().getPhoneNumber(), "An appointment has been cancelled.");
+          //  notificationService.sendSms(appointment.getPatient().getPhoneNumber(), "An appointment has been cancelled.");
             notificationService.sendEmail(appointment.getPatient().getEmail(), "Appointment Cancellation", "An appointment has been cancelled.");
             notificationService.sendEmail(appointment.getDoctor().getEmail(), "Appointment Cancellation", "An appointment has been cancelled.");
 

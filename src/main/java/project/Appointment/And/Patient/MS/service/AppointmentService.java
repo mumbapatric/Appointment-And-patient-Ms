@@ -71,8 +71,8 @@ public class AppointmentService {
                 " at " + savedAppointment.getLocation() + "kindly check schedule to confirm or cancel";
 
         // Send SMS notification
-        notificationService.sendSms(patient.getPhoneNumber(), notificationMessage);
-        notificationService.sendSms(doctor.getUser().getPhoneNumber(), notificationDoctor);
+        //notificationService.sendSms(patient.getPhoneNumber(), notificationMessage);
+       // notificationService.sendSms(doctor.getUser().getPhoneNumber(), notificationDoctor);
         // Send Email notification
         emailService.sendEmail(patient.getEmail(),
                 "Appointment Confirmation", notificationMessage);
