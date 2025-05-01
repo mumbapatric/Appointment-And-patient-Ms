@@ -1,19 +1,12 @@
-# Ignore everything
+# Ignore everything in the context
 /*
 
-# Allow target directory
-!/target/
-
-# Allow the .jar file inside target/
-!/target/Appointment-And-Patient-MS-0.0.1-SNAPSHOT.jar
-
-# Allow pom.xml explicitly
+# Allow necessary files
 !pom.xml
-
-# Allow src directory explicitly
 !src/
+!target/Appointment-And-Patient-MS-0.0.1-SNAPSHOT.jar
 
-# Exclude IDE and build tool directories
+# Exclude IDE and build tool configs
 .idea
 *.iws
 *.iml
@@ -25,7 +18,7 @@
 /build/
 /.vscode/
 
-# Ignore application-*.yml files, but include specific ones
+# Ignore any environment-dependent configs unless needed
 /src/main/resources/application-*.yml
 !/src/main/resources/application-dev.yml
 !/src/main/resources/application-test.yml
