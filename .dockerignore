@@ -1,29 +1,31 @@
-# Ignore everything in the context
+# Ignore everything
 /*
 
-# But do not ignore the target directory
+# Allow target directory
 !/target/
 
-# Specifically, allow the .jar file inside target/
+# Allow the .jar file inside target/
 !/target/Appointment-And-Patient-MS-0.0.1-SNAPSHOT.jar
 
-# IDE files (you can exclude if not needed in Docker context)
+# Allow pom.xml explicitly
+!pom.xml
+
+# Allow src directory explicitly
+!src/
+
+# Exclude IDE and build tool directories
 .idea
 *.iws
 *.iml
 *.ipr
-
-# Ignore any build directories
 /nbproject/private/
 /nbbuild/
 /dist/
 /nbdist/
 /build/
+/.vscode/
 
-# VS Code
-.vscode/
-
-# Ignore application-*.yml files, but keep specific environment files
+# Ignore application-*.yml files, but include specific ones
 /src/main/resources/application-*.yml
 !/src/main/resources/application-dev.yml
 !/src/main/resources/application-test.yml

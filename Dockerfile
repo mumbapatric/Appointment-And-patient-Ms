@@ -1,12 +1,18 @@
-# === Build Stage ===
+# Use Maven to build the project
 FROM maven:3.9.6-eclipse-temurin-17 AS build
-WORKDIR /build
-COPY . .
-RUN mvn clean package -DskipTests
 
-# === Runtime Stage ===
-FROM openjdk:17-jdk-slim
+# Create working directory
+RUN mkdir -p /app
 WORKDIR /app
-COPY --from=build /build/target/Appointment-And-Patient-MS-0.0.1-SNAPSHOT.jar /app/Appointment-And-Patient-MS.jar
-EXPOSE 8080
-CMD ["java", "-jar", "Appointment-And-Patient-MS.jar"]
+
+# Copy the pom.xml file to /app
+COPY pom.xml /app/
+
+# Copy the source code to /app (also include src folder if it exists)
+COPY src /app/src/
+
+# Verify that pom.xml exists
+RUN ls -l /app
+
+# Package the app
+RUN mvn clean package -DskipTests
