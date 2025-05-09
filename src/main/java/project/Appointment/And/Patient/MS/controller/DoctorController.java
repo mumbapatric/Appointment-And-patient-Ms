@@ -62,6 +62,13 @@ public class DoctorController {
         ));
     }
 
+    //find doctor by name
+    @GetMapping("/doctorName")
+    public ResponseEntity<List<Doctor>> findByName(@RequestParam String name) {
+        List<Doctor> doctors = doctorService.findDoctorByName(name);
+        return doctors.isEmpty() ? ResponseEntity.notFound().build() : ResponseEntity.ok(doctors);
+    }
+
     //find doctor by specialization
     @GetMapping("/specialization")
     public ResponseEntity<List<Doctor>> findBySpecialization(@RequestParam String query) {
@@ -74,6 +81,8 @@ public class DoctorController {
     public Doctor getDoctorByUserId(@PathVariable Long userId) {
         return doctorService.getDoctorByUserId(userId);
     }
+
+
     //update doctor
     @PutMapping("/{id}")
     public ResponseEntity<Doctor> updateDoctor(@PathVariable Long id, @RequestBody Doctor doctor) {
@@ -86,6 +95,17 @@ public class DoctorController {
     public ResponseEntity<Void> deleteDoctor(@RequestParam String email) {
         boolean isDeleted = doctorService.deleteDoctor(email);
         return isDeleted ? ResponseEntity.noContent().build() : ResponseEntity.notFound().build();
+    }
+
+    @PutMapping("/{doctorId}/freeze")
+    public ResponseEntity<Void> freezeDoctor(@PathVariable Long doctorId) {
+        doctorService.freezeDoctor(doctorId);
+        return ResponseEntity.noContent().build();
+    }
+    @PutMapping("/{doctorId}/unfreeze")
+    public ResponseEntity<Void> unfreezeDoctor(@PathVariable Long doctorId){
+        doctorService.unFreezeDoctor(doctorId);
+        return ResponseEntity.noContent().build();
     }
 
 }

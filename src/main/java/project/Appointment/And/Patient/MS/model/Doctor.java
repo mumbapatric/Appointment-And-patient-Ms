@@ -16,6 +16,13 @@ public class Doctor {
     @OneToOne
     @JoinColumn(name = "user_id")
     private User user;
+    @PreUpdate
+    private void syncUserStatus() {
+        if (user != null) {
+            user.setEnabled(this.status == Status.ACTIVE);
+        }
+    }
+
     @Column(nullable = false)
     private String name;
     @Column(nullable = false ,unique = true)
@@ -26,4 +33,12 @@ public class Doctor {
     private String location;
     @Column(nullable = false)
     private String phoneNumber;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status", nullable = false)
+    private Status status = Status.ACTIVE;
+
+    public enum Status {
+        ACTIVE,
+        FROZEN
+    }
 }

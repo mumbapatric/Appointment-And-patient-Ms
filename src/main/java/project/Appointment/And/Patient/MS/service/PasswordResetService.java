@@ -4,6 +4,7 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import project.Appointment.And.Patient.MS.model.PasswordResetToken;
 import project.Appointment.And.Patient.MS.model.User;
 import project.Appointment.And.Patient.MS.repository.PasswordResetTokenRepository;
@@ -18,7 +19,7 @@ public class PasswordResetService {
     private final PasswordResetTokenRepository passwordResetTokenRepository;
     private final UserRepository userRepository;
     private final JavaMailSender javaMailSender;
-    private final PasswordEncoder passwordEncoder;  // Added for encoding passwords
+    private final PasswordEncoder passwordEncoder;
 
     public PasswordResetService(PasswordResetTokenRepository passwordResetTokenRepository,
                                 UserRepository userRepository,
@@ -34,16 +35,13 @@ public class PasswordResetService {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        // check if token already exists
         PasswordResetToken resetToken = passwordResetTokenRepository.findByUser(user);
         String token = UUID.randomUUID().toString();
 
         if (resetToken != null) {
-            // Update existing token
             resetToken.setToken(token);
             resetToken.setExpiryDate(LocalDateTime.now().plusMinutes(5));
         } else {
-            // Create a new token
             resetToken = new PasswordResetToken();
             resetToken.setToken(token);
             resetToken.setUser(user);
@@ -56,14 +54,15 @@ public class PasswordResetService {
 
     public void sendResetTokenEmail(String email, String token) {
         String resetLink = "http://localhost:8080/api/users/reset-password?token=" + token;
-        String userToken1 =token;
         SimpleMailMessage mailMessage = new SimpleMailMessage();
         mailMessage.setTo(email);
         mailMessage.setSubject("Password Reset Request");
-        mailMessage.setText("To reset your password, click the link below:\n" + resetLink + "\n\n" + "Your token is: "+ userToken1);
+        mailMessage.setText("To reset your password, click the link below:\n" + resetLink +
+                "\n\nYour token is: " + token);
         javaMailSender.send(mailMessage);
     }
 
+    @Transactional
     public void resetPassword(String token, String newPassword) {
         PasswordResetToken resetToken = passwordResetTokenRepository.findByToken(token);
 
@@ -75,6 +74,9 @@ public class PasswordResetService {
         user.setPassword(passwordEncoder.encode(newPassword));
         userRepository.save(user);
 
-        passwordResetTokenRepository.delete(resetToken);
+        passwordResetTokenRepository.deleteById(resetToken.getId());
+
+        // Optional: logging
+        System.out.println("Password reset for: " + user.getEmail());
     }
 }

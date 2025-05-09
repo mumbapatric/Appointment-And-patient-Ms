@@ -5,12 +5,10 @@ import org.springframework.stereotype.Service;
 import project.Appointment.And.Patient.MS.model.Appointment;
 import project.Appointment.And.Patient.MS.model.Doctor;
 import project.Appointment.And.Patient.MS.model.Patient;
+import project.Appointment.And.Patient.MS.model.User;
 import project.Appointment.And.Patient.MS.report.ExcelReportGenerator;
 import project.Appointment.And.Patient.MS.report.PdfReportGenerator;
-import project.Appointment.And.Patient.MS.repository.AppointmentRepository;
-import project.Appointment.And.Patient.MS.repository.DoctorRepository;
-import project.Appointment.And.Patient.MS.repository.NotificationRepository;
-import project.Appointment.And.Patient.MS.repository.PatientRepository;
+import project.Appointment.And.Patient.MS.repository.*;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -21,6 +19,7 @@ import java.util.Map;
 
 @Service
 public class AppointmentService {
+    private final UserRepository userRepository;
     private final NotificationService notificationService;
     private final PatientRepository patientRepository;
     private final AppointmentRepository appointmentRepository;
@@ -29,7 +28,9 @@ public class AppointmentService {
     private final PdfReportGenerator pdfReportGenerator;
     private final ExcelReportGenerator excelReportGenerator;
 
-    public AppointmentService(NotificationRepository notificationRepository, NotificationService notificationService, PatientRepository patientRepository, AppointmentRepository appointmentRepository, DoctorRepository doctorRepository, EmailService emailService, PdfReportGenerator pdfReportGenerator, ExcelReportGenerator excelReportGenerator) {
+    public AppointmentService(NotificationRepository notificationRepository,  UserRepository userRepository, NotificationService notificationService, PatientRepository patientRepository, AppointmentRepository appointmentRepository, DoctorRepository doctorRepository, EmailService emailService, PdfReportGenerator pdfReportGenerator, ExcelReportGenerator excelReportGenerator) {
+        this.userRepository = userRepository;
+
         this.notificationService = notificationService;
         this.patientRepository = patientRepository;
         this.appointmentRepository = appointmentRepository;
@@ -51,6 +52,9 @@ public class AppointmentService {
         // Load doctor details
         Doctor doctor = doctorRepository.findById(appointment.getDoctor().getId())
                 .orElseThrow(() -> new IllegalArgumentException("Doctor not found"));
+        if (doctor.getStatus() == Doctor.Status.FROZEN){
+            throw new IllegalArgumentException("Appointment cannot be created. The doctor is frozen.\n");
+        }
 
         // Set patient and doctor details
         appointment.setPatient(patient);

@@ -32,6 +32,8 @@ public class User implements UserDetails {
     @Column(nullable = false)
     private String password;
 
+    private boolean enabled = true;
+
     @Column(name = "phonenumber")
     private String phoneNumber;
 
@@ -82,7 +84,7 @@ public class User implements UserDetails {
     @Override
     @JsonIgnore
     public boolean isEnabled() {
-        return true;
+        return enabled;
     }
 
     public enum Role {

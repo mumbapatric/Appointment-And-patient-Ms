@@ -15,5 +15,9 @@ public interface DoctorRepository extends JpaRepository<Doctor,Long> {
     @Transactional
     Optional<Doctor> findByEmail(String email);
     void deleteByEmail(String email);
+    List<Doctor>findByNameContainingIgnoreCase(String name);
+    List<Doctor> findByStatus(Doctor.Status status);
+    Optional<Doctor> findByUserUsername(String username);
+
 }
 

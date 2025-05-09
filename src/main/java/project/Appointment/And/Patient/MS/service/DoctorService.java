@@ -1,12 +1,10 @@
 package project.Appointment.And.Patient.MS.service;
 
-import com.sun.jdi.StringReference;
 import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import project.Appointment.And.Patient.MS.dto.RegisterDoctorDTO;
 import project.Appointment.And.Patient.MS.exceptions.DoctorException;
-import project.Appointment.And.Patient.MS.exceptions.UserException;
 import project.Appointment.And.Patient.MS.model.*;
 import project.Appointment.And.Patient.MS.repository.*;
 
@@ -104,6 +102,11 @@ public class DoctorService {
         return doctorRepository.save(existingDoctor);
     }
 
+    //find doctor by name
+    public List<Doctor> findDoctorByName(String query){
+        return doctorRepository.findByNameContainingIgnoreCase(query);
+    }
+
     //delete doctor
     public boolean deleteDoctor(String email) {
         Doctor doctor = doctorRepository.findByEmail(email)
@@ -123,5 +126,28 @@ public class DoctorService {
 
     public Long getTotalDoctors() {
         return doctorRepository.count();
+    }
+
+    //freeze doctor
+    public Doctor freezeDoctor(Long id){
+        Doctor doctor = doctorRepository.findById(id).orElseThrow(()->new RuntimeException("Doctor not found with id: " + id));
+        doctor.setStatus(Doctor.Status.FROZEN);
+        doctor.getUser().setEnabled(false);
+        return doctorRepository.save(doctor);
+    }
+
+    //unfreeze doctor
+    public Doctor unFreezeDoctor(Long id){
+        Doctor doctor = doctorRepository.findById(id).orElseThrow(()->new RuntimeException("Doctor not found with id: " + id));
+        doctor.setStatus(Doctor.Status.ACTIVE);
+        doctor.getUser().setEnabled(true);
+        return doctorRepository.save(doctor);
+    }
+
+    public List<Doctor> findAllActiveDoctors() {
+        return doctorRepository.findByStatus(Doctor.Status.ACTIVE);
+    }
+    public List<Doctor> findAllFrozenDoctors() {
+        return doctorRepository.findByStatus(Doctor.Status.FROZEN);
     }
 }
