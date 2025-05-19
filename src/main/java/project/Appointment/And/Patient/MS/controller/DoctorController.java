@@ -69,6 +69,8 @@ public class DoctorController {
         return doctors.isEmpty() ? ResponseEntity.notFound().build() : ResponseEntity.ok(doctors);
     }
 
+
+
     //find doctor by specialization
     @GetMapping("/specialization")
     public ResponseEntity<List<Doctor>> findBySpecialization(@RequestParam String query) {

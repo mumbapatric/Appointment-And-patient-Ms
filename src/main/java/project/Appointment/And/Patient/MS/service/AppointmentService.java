@@ -75,8 +75,8 @@ public class AppointmentService {
                 " at " + savedAppointment.getLocation() + "kindly check schedule to confirm or cancel";
 
         // Send SMS notification
-        //notificationService.sendSms(patient.getPhoneNumber(), notificationMessage);
-       // notificationService.sendSms(doctor.getUser().getPhoneNumber(), notificationDoctor);
+       // notificationService.sendSms(patient.getPhoneNumber(), notificationMessage);
+      //  notificationService.sendSms(doctor.getUser().getPhoneNumber(), notificationDoctor);
         // Send Email notification
         emailService.sendEmail(patient.getEmail(),
                 "Appointment Confirmation", notificationMessage);
@@ -151,11 +151,17 @@ public class AppointmentService {
         return appointmentRepository.findByTimeBetween(startOfDay, endOfDay);
     }
 
+    public Appointment save(Appointment appointment) {
+        return appointmentRepository.save(appointment);
+    }
+
     // Update appointment status
-    public Appointment updateAppointmentStatus(Long id, Appointment.AppointmentStatus status) {
+    public Appointment updateAppointmentStatus(Long id, Appointment.AppointmentStatus status,LocalDate date,LocalTime time) {
         Appointment appointment = findById(id);
         if (appointment != null) {
             appointment.setStatus(status);
+            if (date != null) appointment.setDate(date);
+            if (time != null) appointment.setTime(time);
             return appointmentRepository.save(appointment);
         }
         return null;

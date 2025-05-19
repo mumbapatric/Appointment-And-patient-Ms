@@ -43,6 +43,10 @@ twilio:
   phone:
     number: +15677575781
 
+nextsms:
+  api:
+    key: ${NEXT_API_KEY}
+    secret: ${NEXT_API_SECRET}
 # API DOC
 springdoc:
   swagger-ui:

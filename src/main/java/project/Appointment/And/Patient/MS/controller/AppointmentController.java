@@ -1,8 +1,6 @@
 package project.Appointment.And.Patient.MS.controller;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -94,7 +92,7 @@ public class AppointmentController {
     // Cancel appointment by patient
     @PutMapping("/{id}/cancel")
     public ResponseEntity<String> cancelAppointment(@PathVariable Long id) {
-        Appointment updatedAppointment = appointmentService.updateAppointmentStatus(id, Appointment.AppointmentStatus.CANCEL);
+        Appointment updatedAppointment = appointmentService.updateAppointmentStatus(id, Appointment.AppointmentStatus.CANCEL,null, null);
         if (updatedAppointment != null) {
            // notificationService.sendSms(updatedAppointment.getPatientPhoneNumber(), "Your appointment has been cancelled by doctor.");
             notificationService.sendEmail(updatedAppointment.getPatientEmail(), "Appointment Cancelled", "Your appointment has been cancelled.");
@@ -105,20 +103,36 @@ public class AppointmentController {
 
     // Confirm appointment by doctor
     @PutMapping("/{id}/confirm")
-    public ResponseEntity<String> confirmAppointment(@PathVariable Long id) {
-        Appointment updatedAppointment = appointmentService.updateAppointmentStatus(id, Appointment.AppointmentStatus.CONFIRMED);
-        if (updatedAppointment != null) {
-           // notificationService.sendSms(updatedAppointment.getPatientPhoneNumber(), "Your appointment has been confirmed by the doctor.");
-            notificationService.sendEmail(updatedAppointment.getPatientEmail(), "Appointment Confirmed", "Your appointment has been confirmed by the doctor.");
+    public ResponseEntity<String> confirmAppointment(
+            @PathVariable Long id,
+            @RequestBody Appointment updatedAppointment
+    ) {
+        Appointment appointment = appointmentService.findById(id);
+        if (appointment != null) {
+            if (updatedAppointment.getDate() != null) {
+                appointment.setDate(updatedAppointment.getDate());
+            }
+            if (updatedAppointment.getTime() != null) {
+                appointment.setTime(updatedAppointment.getTime());
+            }
+            appointment.setStatus(Appointment.AppointmentStatus.CONFIRMED);
+            appointmentService.save(appointment);
+
+            notificationService.sendEmail(
+                    appointment.getPatientEmail(),
+                    "Appointment Confirmed",
+                    "Your appointment has been confirmed for " + appointment.getDate() + " at " + appointment.getTime() + "."
+            );
             return ResponseEntity.ok("Appointment confirmed successfully");
         }
         return ResponseEntity.notFound().build();
     }
 
+
     // Reject appointment by doctor
     @PutMapping("/{id}/reject")
     public ResponseEntity<String> rejectAppointment(@PathVariable Long id) {
-        Appointment updatedAppointment = appointmentService.updateAppointmentStatus(id, Appointment.AppointmentStatus.CANCEL);
+        Appointment updatedAppointment = appointmentService.updateAppointmentStatus(id, Appointment.AppointmentStatus.CANCEL,null, null);
         if (updatedAppointment != null) {
            // notificationService.sendSms(updatedAppointment.getPatientPhoneNumber(), "Your appointment has been rejected by the doctor.");
             notificationService.sendEmail(updatedAppointment.getPatientEmail(), "Appointment Rejected", "Your appointment has been rejected by the doctor.");

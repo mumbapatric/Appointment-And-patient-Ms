@@ -150,4 +150,6 @@ public class DoctorService {
     public List<Doctor> findAllFrozenDoctors() {
         return doctorRepository.findByStatus(Doctor.Status.FROZEN);
     }
+
+
 }

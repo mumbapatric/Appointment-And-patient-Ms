@@ -6,7 +6,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import project.Appointment.And.Patient.MS.dto.ChangePassword;
 import project.Appointment.And.Patient.MS.exceptions.UserException;
+import project.Appointment.And.Patient.MS.model.Patient;
 import project.Appointment.And.Patient.MS.model.User;
+import project.Appointment.And.Patient.MS.repository.PatientRepository;
 import project.Appointment.And.Patient.MS.repository.UserRepository;
 import java.util.List;
 
@@ -18,10 +20,12 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final PatientRepository patientRepository;
 
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, PatientRepository patientRepository) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.patientRepository = patientRepository;
     }
 
     // add user to Db
@@ -60,11 +64,18 @@ public class UserService {
     public User updateUser(Long id, User updatedUser) {
         User existingUser = userRepository.findById(id)
                 .orElseThrow(() -> new UserException.UserNotFoundException("User not found with id " + id));
-        existingUser.setName(updatedUser.getName());
         existingUser.setEmail(updatedUser.getEmail());
         existingUser.setPhoneNumber(updatedUser.getPhoneNumber());
-        return userRepository.save(existingUser);
+        User savedUser = userRepository.save(existingUser);
+        Patient patient = patientRepository.findByUserId(savedUser.getId()).orElse(null);
+        if (patient != null) {
+            patient.setEmail(savedUser.getEmail());
+            patient.setPhoneNumber(savedUser.getPhoneNumber());
+            patientRepository.save(patient);
+        }
+        return savedUser;
     }
+
 
     //delete user
     public boolean deleteUser(Long id) {

@@ -86,8 +86,14 @@ public class PatientService {
         existingPatient.setAddress(updatedPatient.getAddress());
         existingPatient.setEmail(updatedPatient.getEmail());
         existingPatient.setName(updatedPatient.getName());
-
         existingPatient.setPhoneNumber(updatedPatient.getPhoneNumber());
+        User existingUser = existingPatient.getUser();
+        User updatedUser = updatedPatient.getUser();
+        if (existingUser != null && updatedUser != null) {
+            existingUser.setName(updatedPatient.getName());
+            existingUser.setEmail(updatedPatient.getEmail());
+            existingUser.setPhoneNumber(updatedPatient.getPhoneNumber());
+        }
         return patientRepository.save(existingPatient);
     }
 
