@@ -67,16 +67,16 @@ public class AppointmentService {
         // Construct the notification message
         String notificationMessage = "Your appointment is scheduled with Dr. " +
                 savedAppointment.getDoctor().getUser().getName() +
-                " on " + savedAppointment.getTime() + savedAppointment.getDate() +
+                " on " + savedAppointment.getTime() + " " + savedAppointment.getDate() +
                 " at " + savedAppointment.getLocation();
 
-        String notificationDoctor = "Dear Doctor you have appointment with" +   savedAppointment
-                .getPatient().getName()  +  " on " + savedAppointment.getTime() +savedAppointment.getDate() +
-                " at " + savedAppointment.getLocation() + "kindly check schedule to confirm or cancel";
+        String notificationDoctor = "Dear Doctor you have appointment with" + " " +  savedAppointment
+                .getPatient().getName()  +  " on " + savedAppointment.getTime() + " " + savedAppointment.getDate() +
+                " at " + savedAppointment.getLocation() +" " + "kindly check schedule to confirm or cancel";
 
         // Send SMS notification
-       // notificationService.sendSms(patient.getPhoneNumber(), notificationMessage);
-      //  notificationService.sendSms(doctor.getUser().getPhoneNumber(), notificationDoctor);
+       notificationService.sendSms(patient.getPhoneNumber(), notificationMessage);
+       notificationService.sendSms(doctor.getUser().getPhoneNumber(), notificationDoctor);
         // Send Email notification
         emailService.sendEmail(patient.getEmail(),
                 "Appointment Confirmation", notificationMessage);

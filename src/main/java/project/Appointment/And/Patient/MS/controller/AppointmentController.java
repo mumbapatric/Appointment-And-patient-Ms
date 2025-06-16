@@ -1,16 +1,20 @@
 package project.Appointment.And.Patient.MS.controller;
+
+import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import project.Appointment.And.Patient.MS.model.Appointment;
 import project.Appointment.And.Patient.MS.repository.DoctorRepository;
 import project.Appointment.And.Patient.MS.service.AppointmentService;
 import project.Appointment.And.Patient.MS.service.DoctorService;
 import project.Appointment.And.Patient.MS.service.NotificationService;
+
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
@@ -20,37 +24,39 @@ import java.util.List;
 public class AppointmentController {
 
     private static final Logger logger = LoggerFactory.getLogger(AppointmentController.class);
+
     private final AppointmentService appointmentService;
     private final NotificationService notificationService;
     private final DoctorRepository doctorRepository;
 
-    public AppointmentController(AppointmentService appointmentService, NotificationService notificationService, DoctorRepository doctorRepository) {
+    public AppointmentController(AppointmentService appointmentService,
+                                 NotificationService notificationService,
+                                 DoctorRepository doctorRepository) {
         this.appointmentService = appointmentService;
         this.notificationService = notificationService;
         this.doctorRepository = doctorRepository;
     }
 
-    // Add appointment (book)
+    private String getCurrentUser() {
+        return SecurityContextHolder.getContext().getAuthentication().getName();
+    }
+
     @PostMapping
-    public ResponseEntity<String> addAppointment(@RequestBody Appointment appointment) {
+    public ResponseEntity<String> addAppointment(@RequestBody Appointment appointment, HttpServletRequest request) {
         logger.info("Received appointment: {}", appointment);
         Appointment savedAppointment = appointmentService.addAppointment(appointment);
-
-       // notificationService.sendSms(savedAppointment.getPatientPhoneNumber(), "Your appointment is scheduled with ");
         notificationService.sendEmail(savedAppointment.getPatientEmail(), "Appointment Confirmation", "Your appointment is scheduled.");
         return ResponseEntity.ok("Appointment added successfully");
     }
 
-    // Get all appointments
     @GetMapping
-    public ResponseEntity<List<Appointment>> findAll() {
+    public ResponseEntity<List<Appointment>> findAll(HttpServletRequest request) {
         List<Appointment> appointments = appointmentService.findAll();
         return ResponseEntity.ok(appointments);
     }
 
-    // Get appointment by ID
     @GetMapping("/{id}")
-    public ResponseEntity<Appointment> findById(@PathVariable Long id) {
+    public ResponseEntity<Appointment> findById(@PathVariable Long id, HttpServletRequest request) {
         Appointment appointment = appointmentService.findById(id);
         if (appointment != null) {
             return ResponseEntity.ok(appointment);
@@ -58,9 +64,8 @@ public class AppointmentController {
         return ResponseEntity.notFound().build();
     }
 
-    //update appointment
     @PutMapping("/{id}")
-    public ResponseEntity<Appointment> updateAppointment(@PathVariable Long id, @RequestBody Appointment updatedAppointment) {
+    public ResponseEntity<Appointment> updateAppointment(@PathVariable Long id, @RequestBody Appointment updatedAppointment, HttpServletRequest request) {
         Appointment appointment = appointmentService.updateAppointment(id, updatedAppointment);
         if (appointment != null) {
             return ResponseEntity.ok(appointment);
@@ -68,45 +73,36 @@ public class AppointmentController {
         return ResponseEntity.notFound().build();
     }
 
-    // Get appointments for a patient
     @GetMapping("/patient/{patientId}")
-    public ResponseEntity<List<Appointment>> getAppointmentsForPatient(@PathVariable Long patientId) {
+    public ResponseEntity<List<Appointment>> getAppointmentsForPatient(@PathVariable Long patientId, HttpServletRequest request) {
         List<Appointment> appointments = appointmentService.findByPatientName(patientId);
         return ResponseEntity.ok(appointments);
     }
 
-    // Get appointments for a doctor
     @GetMapping("/doctor/{doctorId}")
-    public ResponseEntity<List<Appointment>> getAppointmentsForDoctor(@PathVariable Long doctorId) {
+    public ResponseEntity<List<Appointment>> getAppointmentsForDoctor(@PathVariable Long doctorId, HttpServletRequest request) {
         List<Appointment> appointments = appointmentService.findByDoctor(doctorId);
         return ResponseEntity.ok(appointments);
     }
 
-    // Reschedule appointment
     @PutMapping("/{id}/reschedule")
-    public ResponseEntity<Appointment> rescheduleAppointment(@PathVariable Long id, @RequestBody Appointment updatedAppointment) {
+    public ResponseEntity<Appointment> rescheduleAppointment(@PathVariable Long id, @RequestBody Appointment updatedAppointment, HttpServletRequest request) {
         Appointment rescheduledAppointment = appointmentService.updateAppointment(id, updatedAppointment);
         return ResponseEntity.ok(rescheduledAppointment);
     }
 
-    // Cancel appointment by patient
     @PutMapping("/{id}/cancel")
-    public ResponseEntity<String> cancelAppointment(@PathVariable Long id) {
+    public ResponseEntity<String> cancelAppointment(@PathVariable Long id, HttpServletRequest request) {
         Appointment updatedAppointment = appointmentService.updateAppointmentStatus(id, Appointment.AppointmentStatus.CANCEL,null, null);
         if (updatedAppointment != null) {
-           // notificationService.sendSms(updatedAppointment.getPatientPhoneNumber(), "Your appointment has been cancelled by doctor.");
             notificationService.sendEmail(updatedAppointment.getPatientEmail(), "Appointment Cancelled", "Your appointment has been cancelled.");
             return ResponseEntity.ok("Appointment cancelled successfully");
         }
         return ResponseEntity.notFound().build();
     }
 
-    // Confirm appointment by doctor
     @PutMapping("/{id}/confirm")
-    public ResponseEntity<String> confirmAppointment(
-            @PathVariable Long id,
-            @RequestBody Appointment updatedAppointment
-    ) {
+    public ResponseEntity<String> confirmAppointment(@PathVariable Long id, @RequestBody Appointment updatedAppointment, HttpServletRequest request) {
         Appointment appointment = appointmentService.findById(id);
         if (appointment != null) {
             if (updatedAppointment.getDate() != null) {
@@ -117,7 +113,11 @@ public class AppointmentController {
             }
             appointment.setStatus(Appointment.AppointmentStatus.CONFIRMED);
             appointmentService.save(appointment);
-
+            notificationService.sendSms(
+                    appointment.getPatient().getPhoneNumber(),
+                    "Appointment Confirmed: Your appointment has been confirmed for " +
+                            appointment.getDate() + " at " + appointment.getTime() + "."
+            );
             notificationService.sendEmail(
                     appointment.getPatientEmail(),
                     "Appointment Confirmed",
@@ -128,29 +128,22 @@ public class AppointmentController {
         return ResponseEntity.notFound().build();
     }
 
-
-    // Reject appointment by doctor
     @PutMapping("/{id}/reject")
-    public ResponseEntity<String> rejectAppointment(@PathVariable Long id) {
+    public ResponseEntity<String> rejectAppointment(@PathVariable Long id, HttpServletRequest request) {
         Appointment updatedAppointment = appointmentService.updateAppointmentStatus(id, Appointment.AppointmentStatus.CANCEL,null, null);
         if (updatedAppointment != null) {
-           // notificationService.sendSms(updatedAppointment.getPatientPhoneNumber(), "Your appointment has been rejected by the doctor.");
             notificationService.sendEmail(updatedAppointment.getPatientEmail(), "Appointment Rejected", "Your appointment has been rejected by the doctor.");
             return ResponseEntity.ok("Appointment rejected successfully");
         }
         return ResponseEntity.notFound().build();
     }
 
-    // Delete appointment
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteAppointment(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteAppointment(@PathVariable Long id, HttpServletRequest request) {
         Appointment appointment = appointmentService.findById(id);
         if (appointment != null) {
-          //  notificationService.sendSms(appointment.getDoctor().getPhoneNumber(), "An appointment has been cancelled.");
-          //  notificationService.sendSms(appointment.getPatient().getPhoneNumber(), "An appointment has been cancelled.");
             notificationService.sendEmail(appointment.getPatient().getEmail(), "Appointment Cancellation", "An appointment has been cancelled.");
             notificationService.sendEmail(appointment.getDoctor().getEmail(), "Appointment Cancellation", "An appointment has been cancelled.");
-
             boolean isDeleted = appointmentService.deleteAppointment(id);
             if (isDeleted) {
                 return ResponseEntity.noContent().build();
@@ -164,7 +157,8 @@ public class AppointmentController {
     public ResponseEntity<?> generateAppointmentReport(
             @RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
             @RequestParam("endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
-            @RequestParam("format") String format
+            @RequestParam("format") String format,
+            HttpServletRequest request
     ) throws IOException {
         byte[] report = appointmentService.generateAppointmentReport(startDate, endDate, format);
 
@@ -176,5 +170,4 @@ public class AppointmentController {
                 .contentType(MediaType.parseMediaType(contentType))
                 .body(report);
     }
-
 }

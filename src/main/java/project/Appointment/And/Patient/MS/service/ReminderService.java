@@ -54,9 +54,9 @@ public class ReminderService {
             String doctorName = appointment.getDoctorName();
 
             //TODO: I put comment due to twilio subscription Send reminders to patients
-          /*  if (patientPhone != null && !patientPhone.isEmpty()) {
+            if (patientPhone != null && !patientPhone.isEmpty()) {
                 notificationService.sendSms(patientPhone, "Hi " + patientName + ", you have an appointment in 15 minutes with Dr. " + doctorName + ".");
-            }*/
+            }
             notificationService.sendEmail(appointment.getPatientEmail(),
                     "Appointment Reminder",
                     "Hi " + patientName + ", you have an appointment in 15 minutes with Dr. " + doctorName + ".");
@@ -65,10 +65,10 @@ public class ReminderService {
             String doctorPhone = (appointment.getDoctor() != null && appointment.getDoctor().getUser() != null) ?
                     appointment.getDoctor().getUser().getPhoneNumber() : null;
 
-            //TODO: I put comment due to twilio subscription
-          /*  if (doctorPhone != null && !doctorPhone.isEmpty()) {
+
+           if (doctorPhone != null && !doctorPhone.isEmpty()) {
                 notificationService.sendSms(doctorPhone, "Dr. " + doctorName + ", you have an appointment in 15 minutes with patient " + patientName + ".");
-            }*/
+            }
             notificationService.sendEmail(appointment.getDoctor().getUser().getEmail(),
                     "Appointment Reminder",
                     "Dr. " + doctorName + ", you have an appointment in 15 minutes with patient " + patientName + ".");

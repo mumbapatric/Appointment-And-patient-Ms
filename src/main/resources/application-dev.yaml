@@ -44,9 +44,8 @@ twilio:
     number: +15677575781
 
 nextsms:
-  api:
-    key: ${NEXT_API_KEY}
-    secret: ${NEXT_API_SECRET}
+  username: Brightchoice
+  password: Bright1
 # API DOC
 springdoc:
   swagger-ui:

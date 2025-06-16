@@ -66,6 +66,7 @@ public class SecurityConfig {
                                 "/api/v1/nurse/**",
                                 "/api/v1/appointments/**",
                                 "/api/v1/doctors/**",
+                                "/api/v1/logs/**",
                                 "/user/**",
                                 "/css/**",
                                 "/js/**",
