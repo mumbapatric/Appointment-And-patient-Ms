@@ -42,9 +42,7 @@ public class AdminService {
         return appointmentRepository.findAll(); // This should be enhanced to provide actual activity logs
     }
 
-    public Long getTotalPatients() {
-        return userRepository.count();
-    }
+
 
     //create default admin
     @PostConstruct

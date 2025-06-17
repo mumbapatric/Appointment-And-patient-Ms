@@ -110,4 +110,8 @@ public class PatientService {
         return patientRepository.findByUserId(userId).orElse(null);
 
     }
+
+    public Long getTotalPatients() {
+        return patientRepository.count();
+    }
 }

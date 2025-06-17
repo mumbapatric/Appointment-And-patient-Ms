@@ -60,7 +60,7 @@ public class AdminController {
 
     @GetMapping("/dashboard/total-patients")
     public ResponseEntity<Long> getTotalPatients() {
-        return ResponseEntity.ok(adminService.getTotalPatients());
+        return ResponseEntity.ok(patientService.getTotalPatients());
     }
 
     @PostMapping
