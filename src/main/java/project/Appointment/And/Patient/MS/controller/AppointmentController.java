@@ -115,7 +115,7 @@ public class AppointmentController {
             appointmentService.save(appointment);
             notificationService.sendSms(
                     appointment.getPatient().getPhoneNumber(),
-                    "Appointment Confirmed: Your appointment has been confirmed for " +
+                    "Appointment Confirmed:  "+"Dear" +" "+appointment.getPatient().getName() +" "+"Your appointment has been confirmed by Dr. "  +appointment.getDoctor().getName()+
                             appointment.getDate() + " at " + appointment.getTime() + "."
             );
             notificationService.sendEmail(

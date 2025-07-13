@@ -115,7 +115,7 @@ public class AdminController {
             for (Patient patient : patients) {
                 String phone = patient.getPhoneNumber();
                 if (phone != null && !phone.isEmpty()) {
-                    notificationService.sendSms(phone,"Announcement " + message);
+                    notificationService.sendSms(phone,"Announcement :" + message);
                 }
             }
         }
